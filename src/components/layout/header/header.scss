@@ -34,11 +34,11 @@
 		background: $brandBlue;
 		-webkit-mask: url("assets/svgicons/logo-mark.svg") center / contain no-repeat;
 		mask: url("assets/svgicons/logo-mark.svg") center / contain no-repeat;
-		transition: background 0.2s ease;
+		transition: background 0.3s ease, transform 0.3s ease, filter 0.3s ease;
 	}
 
 	&__brand-text {
-		font-family: Inter, sans-serif;
+		font-family: "Cinzel", serif;
 		font-weight: 700;
 		@include adaptiveValue("font-size", 20, 17, 0, 1170, 375);
 		line-height: 28px;
@@ -57,6 +57,8 @@
 	&__brand:hover &__brand-icon,
 	&__brand:focus-visible &__brand-icon {
 		background: $brandGold;
+		transform: translateY(-1px) scale(1.05);
+		filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.35));
 	}
 }
 
