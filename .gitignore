@@ -14,3 +14,6 @@ pnpm-debug.log*
 # cache
 .vite/
 .cache/
+
+# local reference dump
+tmp_shepot_vnutri/
