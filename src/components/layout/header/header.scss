@@ -52,6 +52,11 @@
 	&__menu {
 		display: flex;
 		align-items: center;
+		@include adaptiveValue("gap", 12, 8, 0, 1170, 768);
+	}
+
+	&__mobile-actions {
+		display: none;
 	}
 
 	&__brand:hover &__brand-icon,
@@ -77,8 +82,7 @@
 @media (max-width: 767.98px) {
 	.header {
 		&__container {
-			position: relative;
-			justify-content: center;
+			justify-content: space-between;
 		}
 
 		&__brand {
@@ -86,9 +90,13 @@
 		}
 
 		&__menu {
-			position: absolute;
-			right: 15px;
-			top: 28px;
+			position: static;
+		}
+
+		&__mobile-actions {
+			display: inline-flex;
+			align-items: center;
+			@include adaptiveValue("gap", 10, 6, 0, 767.98, 375);
 		}
 	}
 }
