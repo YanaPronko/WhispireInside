@@ -2,6 +2,7 @@ import './header.scss'
 import '@components/layout/menu/menu.js'
 import '@components/effects/darklite/darklite.js'
 import '@components/effects/scrollto/scrollto.js'
+import '@components/layout/header/plugins/scroll/scroll.js'
 
 const initLangSwitcher = () => {
 	const html = document.documentElement

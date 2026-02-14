@@ -725,3 +725,190 @@
 		color: #fbbf24;
 	}
 }
+
+[data-fls-darklite-light] {
+	.hero {
+		&__bg {
+			background-image: linear-gradient(120deg, rgba(231, 244, 250, 0.82) 10%, rgba(222, 239, 248, 0.62) 46%, rgba(206, 230, 242, 0.86) 100%), url("@img/hero/hero-bg.jpg");
+
+			@media (max-width: toEm(767.98)) {
+				background-image: linear-gradient(150deg, rgba(231, 244, 250, 0.88) 10%, rgba(222, 239, 248, 0.7) 46%, rgba(206, 230, 242, 0.9) 100%), url("@img/hero/hero-bg.jpg");
+			}
+		}
+
+		&__content {
+			color: #053147;
+		}
+
+		&__eyebrow {
+			color: #0f6f94;
+		}
+
+		&__eyebrow-icon {
+			filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+		}
+
+		&__text {
+			color: #0a4663;
+		}
+
+		&__button--primary {
+			background: linear-gradient(90deg, #0f6f94 0%, #094d6f 100%);
+			box-shadow: 0 20px 38px -18px rgba(9, 77, 111, 0.45);
+			&:hover,
+			&:focus-visible {
+				background: linear-gradient(90deg, #1b8eb7 0%, #0f6f94 100%);
+				box-shadow: 0 22px 42px -18px rgba(27, 142, 183, 0.45);
+			}
+		}
+
+		&__scroll-icon {
+			filter: brightness(0) saturate(100%) invert(26%) sepia(39%) saturate(1198%) hue-rotate(166deg) brightness(94%) contrast(96%);
+		}
+	}
+
+	.about {
+		background: linear-gradient(180deg, #f3fbff 0%, #e6f5fb 52%, #f3fbff 100%);
+
+		&__label {
+			color: #0f6f94;
+			img {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+
+		&__subtitle {
+			color: #355a70;
+		}
+
+		&__content {
+			border-color: rgba(95, 151, 175, 0.45);
+			background: rgba(255, 255, 255, 0.78);
+
+			.about__name {
+				color: #0f6f94;
+			}
+
+			p {
+				color: #365d72;
+			}
+		}
+
+		&__feature {
+			border-color: rgba(9, 77, 111, 0.28);
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 249, 255, 0.92) 100%);
+			box-shadow: 0 12px 20px -20px rgba(9, 77, 111, 0.5);
+			&:hover {
+				border-color: rgba(27, 142, 183, 0.55);
+				background: linear-gradient(180deg, rgba(238, 249, 255, 0.96) 0%, rgba(227, 243, 252, 0.96) 100%);
+			}
+			span {
+				color: #0b3f5c;
+			}
+			img {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+	}
+
+	.work {
+		background: linear-gradient(180deg, #f3fbff 0%, #eaf6fb 52%, #f3fbff 100%);
+
+		&__label {
+			color: #0f6f94;
+			img {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+
+		&__lead {
+			color: #0b3f5c;
+		}
+
+		&__text {
+			color: #365d72;
+		}
+
+		&__body {
+			border-color: rgba(95, 151, 175, 0.45);
+			background: rgba(255, 255, 255, 0.8);
+		}
+
+		&__subtitle {
+			color: #0f6f94;
+		}
+
+		&__item {
+			border-color: rgba(9, 77, 111, 0.28);
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.95) 100%);
+			color: #0b3f5c;
+		}
+
+		&__methods {
+			border-top-color: rgba(95, 151, 175, 0.45);
+			p {
+				color: #355a70;
+			}
+			strong {
+				color: #b97814;
+			}
+		}
+	}
+
+	.services {
+		background: linear-gradient(180deg, #f3fbff 0%, #eaf6fb 52%, #f3fbff 100%);
+
+		&__label {
+			color: #0f6f94;
+			img {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+	}
+
+	.service-card {
+		background: rgba(255, 255, 255, 0.84);
+		border-color: rgba(95, 151, 175, 0.42);
+		box-shadow: 0 12px 22px -18px rgba(9, 77, 111, 0.25);
+		&:hover {
+			background: rgba(245, 252, 255, 0.95);
+			box-shadow: 0 18px 30px -20px rgba(27, 142, 183, 0.4);
+		}
+
+		&__overlay {
+			background: linear-gradient(180deg, rgba(247, 252, 255, 0) 0%, rgba(225, 241, 249, 0.34) 60%, rgba(198, 223, 236, 0.62) 100%);
+		}
+
+		&__icon {
+			background: rgba(15, 111, 148, 0.14);
+			border-color: rgba(15, 111, 148, 0.32);
+			img {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+
+		&__title {
+			color: #0f6f94;
+		}
+
+		&__desc {
+			color: #355a70;
+		}
+
+		&__subtitle {
+			color: #b97814;
+		}
+
+		&__list li {
+			color: #456a7e;
+			&::before {
+				filter: brightness(0) saturate(100%) invert(30%) sepia(61%) saturate(945%) hue-rotate(162deg) brightness(93%) contrast(92%);
+			}
+		}
+
+		&__price {
+			border-top-color: rgba(95, 151, 175, 0.52);
+			color: #b97814;
+		}
+	}
+}
