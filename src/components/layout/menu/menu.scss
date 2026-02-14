@@ -207,23 +207,45 @@
 
 [data-fls-darklite-light] {
 	.menu {
+		&__body {
+			@media (max-width: 767.98px) {
+				background: rgba(191, 224, 236, 0.97);
+				&::before {
+					background: rgba(191, 224, 236, 0.99);
+				}
+			}
+		}
+
 		&__link {
-			color: #334155;
+			color: #08364d;
 			@media (any-hover: hover) {
 				&:hover {
-					color: #0f172a;
+					color: #0f6f94;
 				}
 			}
 		}
 
 		&__langs,
 		&__theme {
-			border-color: rgba(51, 65, 85, 0.2);
-			background: rgba(241, 245, 249, 0.9);
+			border-color: #5f97af;
+			background: rgba(154, 201, 219, 0.7);
 		}
 
 		&__theme {
-			color: #0f172a;
+			color: #08364d;
+		}
+
+		&__lang {
+			color: #08364d;
+			&.--active {
+				background: #094d6f;
+				color: #ffffff;
+			}
+		}
+
+		&__button {
+			background: linear-gradient(90deg, #0f6f94 0%, #094d6f 100%);
+			color: #ffffff;
 		}
 	}
 
@@ -231,7 +253,7 @@
 		span,
 		&::before,
 		&::after {
-			background-color: #334155;
+			background-color: #08364d;
 		}
 	}
 }
