@@ -318,6 +318,7 @@ body {
   width: 8rem;
   height: 8rem;
   opacity: 0.5;
+  z-index: 3;
 }
 .about__decor img {
   width: 100%;
@@ -664,10 +665,22 @@ body {
   .header__brand-text {
     line-height: 1.625rem;
   }
+}@media (max-width: 61.99875em) and (min-width: 48em){
+  .about__feature span {
+    font-size: 1.125rem;
+    white-space: normal;
+  }
+}@media (max-width: 61.99875em) and (min-width: 35.999375em){
+  .about__features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }@media (max-width: 61.99875em){
   .about__grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+  .about__content {
+    margin: 0 auto;
   }
 }@media (width <= 48em){
   .hero {
@@ -845,6 +858,12 @@ body {
   .hero__bg {
     background-image: linear-gradient(150deg, rgba(3, 8, 20, 0.82) 10%, rgba(3, 8, 20, 0.63) 48%, rgba(3, 8, 20, 0.9) 100%), url("../assets/img/hero/hero-bg.webp");
     background-position: 64% center;
+  }
+  .about__decor {
+    top: -0.875rem;
+    right: -0.875rem;
+    width: 5.75rem;
+    height: 5.75rem;
   }
   .about__feature {
     min-height: 3.875rem;
