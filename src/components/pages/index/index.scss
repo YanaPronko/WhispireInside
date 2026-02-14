@@ -1,2 +1,179 @@
 .index {
 }
+
+.hero {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	align-items: center;
+	min-height: 100svh;
+	overflow: hidden;
+
+	@include adaptiveValue("padding-top", 132, 110, 0, 1920, 768);
+	@include adaptiveValue("padding-bottom", 80, 56, 0, 1920, 768);
+
+	@media (max-width: toEm(767.98)) {
+		min-height: 92svh;
+		padding-top: 102px;
+		padding-bottom: 48px;
+	}
+
+	&__bg {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		background-image: linear-gradient(120deg, rgba(3, 8, 20, 0.78) 12%, rgba(3, 8, 20, 0.58) 45%, rgba(3, 8, 20, 0.84) 100%), url("@img/hero/hero-bg.jpg");
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+
+		@media (max-width: toEm(767.98)) {
+			background-image: linear-gradient(150deg, rgba(3, 8, 20, 0.82) 10%, rgba(3, 8, 20, 0.63) 48%, rgba(3, 8, 20, 0.9) 100%), url("@img/hero/hero-bg.jpg");
+			background-position: 64% center;
+		}
+	}
+
+	&__content {
+		max-width: toRem(768);
+		color: #f8fafc;
+		margin: 0 auto;
+		text-align: center;
+		transition: opacity 0.25s ease, transform 0.25s ease;
+		will-change: opacity, transform;
+	}
+
+	&__eyebrow {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		margin-bottom: 24px;
+		color: #67e8f9;
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 36, 22, 0, 1920, 375);
+		line-height: 1.2;
+		transition: opacity 0.25s ease, transform 0.25s ease;
+	}
+
+	&__eyebrow-text {
+		display: inline-block;
+		text-align: left;
+		white-space: nowrap;
+	}
+
+	&__eyebrow-break {
+		display: inline;
+	}
+
+	&__eyebrow-icon {
+		flex: 0 0 auto;
+		filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
+	}
+
+	@media (max-width: toEm(330)) {
+		&__eyebrow {
+			gap: 6px;
+			align-items: center;
+			@include adaptiveValue("font-size", 26, 20, 0, 330, 300);
+		}
+		&__eyebrow-text {
+			text-align: center;
+			white-space: normal;
+		}
+		&__eyebrow-break {
+			display: block;
+		}
+		&__eyebrow-icon {
+			margin-top: 0;
+		}
+	}
+
+	&__title {
+		margin-bottom: 24px;
+		font-family: "Cinzel", serif;
+		font-weight: 700;
+		line-height: 1.04;
+		@include adaptiveValue("font-size", 96, 48, 0, 1920, 375);
+		background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	&__text {
+		max-width: toRem(900);
+		margin: 0 auto 48px;
+		color: #e2e8f0;
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 30, 20, 0, 1920, 375);
+		line-height: 1.5;
+	}
+
+	&__actions {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		min-height: 56px;
+		padding: 0 32px;
+		border-radius: 9999px;
+		font-size: toRem(18);
+		line-height: 1;
+		transition: all 0.25s ease;
+
+		&:hover,
+		&:focus-visible {
+			transform: scale(1.05);
+		}
+	}
+
+	&__button--primary {
+		background: linear-gradient(90deg, #0891b2 0%, #2563eb 100%);
+		color: #ffffff;
+		font-weight: 500;
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+		&:hover,
+		&:focus-visible {
+			background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 100%);
+			box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.5);
+		}
+	}
+
+	&__scroll {
+		position: absolute;
+		left: 50%;
+		bottom: 40px;
+		transform: translateX(-50%);
+		z-index: 2;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		color: #22d3ee;
+		transition: opacity 0.25s ease;
+	}
+
+	&__scroll-icon {
+		width: 32px;
+		height: 32px;
+		display: block;
+		filter: brightness(0) saturate(100%) invert(82%) sepia(33%) saturate(5026%) hue-rotate(147deg) brightness(96%) contrast(88%);
+		animation: hero-scroll-bounce 1.5s ease-in-out infinite;
+	}
+}
+
+@keyframes hero-scroll-bounce {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(10px);
+	}
+}

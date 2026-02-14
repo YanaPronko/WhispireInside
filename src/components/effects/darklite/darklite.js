@@ -38,12 +38,14 @@ function darkliteInit() {
 	}
 
 	// Зміна теми по кліку
-	const themeButton = document.querySelector('[data-fls-darklite-set]')
+	const themeButtons = document.querySelectorAll('[data-fls-darklite-set]')
 	const resetButton = document.querySelector('[data-fls-darklite-reset]')
 
-	if (themeButton) {
-		themeButton.addEventListener("click", function (e) {
-			changeTheme(true);
+	if (themeButtons.length) {
+		themeButtons.forEach((themeButton) => {
+			themeButton.addEventListener("click", function () {
+				changeTheme(true);
+			})
 		})
 	}
 	if (resetButton) {

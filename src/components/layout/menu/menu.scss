@@ -135,6 +135,9 @@
 	&__theme {
 		height: 32px;
 		padding: 0 14px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		border: 1px solid rgba(148, 163, 184, 0.4);
 		border-radius: 9999px;
 		font-family: Inter, sans-serif;
@@ -156,6 +159,11 @@
 		width: 18px;
 		height: 18px;
 		display: block;
+		flex: 0 0 18px;
+		object-fit: contain;
+		vertical-align: middle;
+		margin: 0;
+		padding: 0;
 	}
 
 	&__theme-icon--sun {
@@ -220,11 +228,10 @@
 	}
 
 	&__theme--mobile {
-		display: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		@media (max-width: 767.98px) {
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
 			width: 34px;
 			height: 34px;
 			padding: 0;

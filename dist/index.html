@@ -5,22 +5,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="./assets/img/favicon.ico">
 		<title>Home Page</title>
-		<script type="module" crossorigin="" src="./js/index.min.js?v=1771089574723"></script>
-		<link rel="modulepreload" crossorigin="" href="./js/common.min.js?v=1771089574723">
-		<link rel="stylesheet" crossorigin="" href="./css/index.min.css?v=1771089574723">
+		<script type="module" crossorigin="" src="./js/index.min.js?v=1771102730144"></script>
+		<link rel="modulepreload" crossorigin="" href="./js/common.min.js?v=1771102730144">
+		<link rel="stylesheet" crossorigin="" href="./css/index.min.css?v=1771102730144">
 	</head>
 	<body>
 		<div class="wrapper">
 			<header data-fls-header="" data-fls-darklite="" class="header">
 				<div class="header__container">
 					<a href="#hero" data-fls-scrollto="" data-fls-scrollto-header="" class="header__brand" aria-label="Шепот внутри">
-						<img class="header__brand-icon" src="./assets/svgicons/logo-mark.svg" alt="" width="24" height="24">
+						<span class="header__brand-icon" aria-hidden="true"></span>
 						<span class="header__brand-text">Шепот внутри</span>
 					</a>
 					<div class="header__menu menu">
-						<button type="button" data-fls-menu="" class="menu__icon icon-menu" aria-label="Открыть меню">
-							<span></span>
-						</button>
 						<nav class="menu__body" aria-label="Основная навигация">
 							<ul class="menu__list">
 								<li class="menu__item">
@@ -36,23 +33,57 @@
 									<a href="#contact" data-fls-scrollto="" data-fls-scrollto-header="" class="menu__link">Контакты</a>
 								</li>
 							</ul>
-							<div class="menu__controls">
-								<div class="menu__langs" aria-label="Выбор языка">
-									<button type="button" class="menu__lang --active" data-fls-lang="ru">RU</button>
-									<button type="button" class="menu__lang" data-fls-lang="en">EN</button>
-								</div>
-								<button type="button" class="menu__theme" data-fls-darklite-set="" aria-label="Сменить тему">Theme</button>
-							</div>
 							<a href="#contact" data-fls-scrollto="" data-fls-scrollto-header="" class="menu__button">
-								<img src="./assets/svgicons/sparkle-icon.svg" alt="" width="16" height="16">
+								<img src="./assets/svgicons/sparkles-icon.svg" alt="" width="16" height="16">
 								<span>Записаться</span>
 							</a>
 						</nav>
+						<div class="header__mobile-actions">
+							<a href="#contact" data-fls-scrollto="" data-fls-scrollto-header="" class="menu__button menu__button--mobile">
+								<img src="./assets/svgicons/sparkles-icon.svg" alt="" width="16" height="16">
+								<span>Записаться</span>
+							</a>
+							<button type="button" class="menu__theme menu__theme--mobile" data-fls-darklite-set="" aria-label="Сменить тему">
+								<img class="menu__theme-icon menu__theme-icon--moon" src="./assets/svgicons/moon-icon.svg" alt="" width="18" height="18">
+								<img class="menu__theme-icon menu__theme-icon--sun" src="./assets/svgicons/sun-icon.svg" alt="" width="18" height="18">
+							</button>
+						</div>
+						<button type="button" data-fls-menu="" class="menu__icon icon-menu" aria-label="Открыть меню">
+							<span></span>
+						</button>
 					</div>
 				</div>
 			</header>
 			<main class="page">
-				<div data-fls-index="" class="index"></div>
+				<div data-fls-index="" class="index">
+					<section id="hero" class="hero" aria-labelledby="hero-title">
+						<div class="hero__bg" role="presentation" aria-hidden="true"></div>
+						<div class="hero__container">
+							<div class="hero__content">
+								<p class="hero__eyebrow">
+									<img src="./assets/svgicons/sparkles-icon.svg" class="hero__eyebrow-icon" alt="" width="24" height="24">
+									<span class="hero__eyebrow-text">
+										Психолог-специалист
+										<span class="hero__eyebrow-break">по таро</span>
+									</span>
+								</p>
+								<h1 id="hero-title" class="hero__title">Шепот внутри</h1>
+								<p class="hero__text">
+									Откройте путь к глубокому пониманию себя через мудрость карт и профессиональную психологическую поддержку
+								</p>
+								<div class="hero__actions">
+									<a href="#contact" data-fls-scrollto="" data-fls-scrollto-header="" class="hero__button hero__button--primary">
+										<span>Записаться на консультацию</span>
+										<img src="./assets/svgicons/sparkles-icon.svg" alt="" width="20" height="20">
+									</a>
+								</div>
+							</div>
+						</div>
+						<a href="#about" data-fls-scrollto="#about" data-fls-scrollto-header="" data-hero-scroll="" class="hero__scroll" aria-label="Прокрутить вниз">
+							<img src="./assets/svgicons/arrow-down-icon.svg" class="hero__scroll-icon" alt="" width="32" height="32">
+						</a>
+					</section>
+				</div>
 			</main>
 			<footer data-fls-footer="" class="footer">
 				<div class="footer__container"></div>

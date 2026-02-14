@@ -56,7 +56,9 @@
 	}
 
 	&__mobile-actions {
-		display: none;
+		display: inline-flex;
+		align-items: center;
+		@include adaptiveValue("gap", 10, 6, 0, 1170, 375);
 	}
 
 	&__brand:hover &__brand-icon,
@@ -94,8 +96,6 @@
 		}
 
 		&__mobile-actions {
-			display: inline-flex;
-			align-items: center;
 			@include adaptiveValue("gap", 10, 6, 0, 767.98, 375);
 		}
 	}
