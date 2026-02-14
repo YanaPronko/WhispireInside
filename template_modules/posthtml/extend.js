@@ -43,7 +43,11 @@ const processAttributes = (attrs, prependDot) => {
 	for (const [attr, value] of Object.entries(attrs || {})) {
 		if (typeof value === 'string') {
 			attrs[attr] = replaceAliases(value, { prependDot })
-			if (['src', 'url'].includes(attr) && !attrs[attr].startsWith('http')) src = attrs[attr]
+			if (['src', 'url'].includes(attr) && !attrs[attr].startsWith('http')) {
+				if (attrs[attr].startsWith('/')) attrs[attr] = `.${attrs[attr]}`
+				if (/^\.[^/.]/.test(attrs[attr])) attrs[attr] = `./${attrs[attr].slice(1)}`
+				src = attrs[attr]
+			}
 		}
 	}
 	return src
@@ -53,7 +57,7 @@ function handleExtendsNodes(tree, options, messages) {
 	match.call(tree = applyPluginsToTree(tree, options.plugins), { tag: options.tagName }, extendsNode => {
 
 		// Для стандартних HTML-тегів prependDot = false, для інших true
-		const prependDot = false //!htmlTags.includes(node.tag)
+		const prependDot = false
 		extendsNode.attrs.src = processAttributes(extendsNode.attrs, prependDot)
 
 		if (!extendsNode.attrs || !extendsNode.attrs.src) {

@@ -4,14 +4,21 @@
 	}
 	// .menu__body
 	&__body {
-		@media (max-width: toEm($mobile)) {
+		display: flex;
+		align-items: center;
+		@include adaptiveValue("gap", 28, 16, 0, 1170, 768);
+		@media (max-width: 767.98px) {
 			position: fixed;
 			width: 100%;
 			height: 100svh;
 			left: -100%;
 			top: 0;
 			overflow: auto;
-			padding: 50px 15px 30px 15px;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 24px;
+			padding: 112px 16px 32px 16px;
+			background: #020617;
 			transition: left 0.3s;
 			&::before {
 				content: "";
@@ -20,6 +27,7 @@
 				height: 70px;
 				left: -100%;
 				top: 0;
+				background: rgba(2, 6, 23, 0.95);
 				transition: left 0.3s;
 				z-index: 2;
 			}
@@ -33,7 +41,14 @@
 	}
 	// .menu__list
 	&__list {
-		@media (max-width: toEm($mobile)) {
+		display: flex;
+		align-items: center;
+		@include adaptiveValue("gap", 32, 18, 0, 1170, 768);
+		@media (max-width: 767.98px) {
+			width: 100%;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 20px;
 		}
 	}
 	// .menu__item
@@ -41,7 +56,100 @@
 	}
 	// .menu__link
 	&__link {
-		@media (max-width: toEm($mobile)) {
+		font-family: Inter, sans-serif;
+		font-weight: 400;
+		@include adaptiveValue("font-size", 19, 15, 0, 1170, 768);
+		line-height: 28px;
+		color: #cbd5e1;
+		transition: color 0.2s ease;
+		@media (any-hover: hover) {
+			&:hover {
+				color: #ffffff;
+			}
+		}
+		@media (max-width: 767.98px) {
+			font-size: 24px;
+			line-height: 32px;
+		}
+	}
+
+	&__controls {
+		display: inline-flex;
+		align-items: center;
+		@include adaptiveValue("gap", 12, 8, 0, 1170, 768);
+
+		@media (max-width: 767.98px) {
+			width: 100%;
+			justify-content: space-between;
+		}
+	}
+
+	&__langs {
+		display: inline-flex;
+		align-items: center;
+		background: rgba(15, 23, 42, 0.6);
+		border: 1px solid rgba(148, 163, 184, 0.3);
+		border-radius: 9999px;
+		padding: 3px;
+	}
+
+	&__lang {
+		width: 40px;
+		height: 32px;
+		border-radius: 9999px;
+		font-family: Inter, sans-serif;
+		font-weight: 600;
+		font-size: 13px;
+		line-height: 18px;
+		color: #cbd5e1;
+		transition: background-color 0.2s ease, color 0.2s ease;
+
+		&.--active {
+			background: #2563eb;
+			color: #ffffff;
+		}
+	}
+
+	&__theme {
+		height: 32px;
+		padding: 0 14px;
+		border: 1px solid rgba(148, 163, 184, 0.4);
+		border-radius: 9999px;
+		font-family: Inter, sans-serif;
+		font-weight: 500;
+		font-size: 13px;
+		line-height: 18px;
+		color: #e2e8f0;
+		background: rgba(15, 23, 42, 0.6);
+		transition: background-color 0.2s ease, color 0.2s ease;
+	}
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		@include adaptiveValue("padding-left", 24, 16, 0, 1170, 768);
+		@include adaptiveValue("padding-right", 24, 16, 0, 1170, 768);
+		padding-top: 8px;
+		padding-bottom: 8px;
+		border-radius: 9999px;
+		background: linear-gradient(90deg, #0891b2 0%, #2563eb 100%);
+		box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+		color: #ffffff;
+		font-family: Inter, sans-serif;
+		font-weight: 500;
+		@include adaptiveValue("font-size", 17, 14, 0, 1170, 768);
+		line-height: 24px;
+
+		img {
+			width: 16px;
+			height: 16px;
+		}
+
+		@media (max-width: 767.98px) {
+			padding: 12px 24px;
+			font-size: 18px;
+			line-height: 26px;
 		}
 	}
 }
@@ -49,11 +157,11 @@
 //Burger Icon
 .icon-menu {
 	display: none;
-	@media (max-width: toEm($mobile)) {
+	@media (max-width: 767.98px) {
 		display: block;
 		position: relative;
-		width: toRem(30);
-		height: toRem(18);
+		width: 24px;
+		height: 24px;
 		z-index: 5;
 		@media (any-hover: none) {
 			cursor: default;
@@ -65,15 +173,15 @@
 			transition: all 0.3s ease 0s;
 			right: 0;
 			position: absolute;
-			width: 100%;
+			width: 16px;
 			height: 2px;
-			background-color: #000;
+			background-color: #cbd5e1;
 		}
 		&::before {
-			top: 0;
+			top: 5px;
 		}
 		&::after {
-			bottom: 0;
+			bottom: 5px;
 		}
 		span {
 			top: calc(50% - 1px);
@@ -93,6 +201,37 @@
 				bottom: calc(50% - 1px);
 				transform: rotate(45deg);
 			}
+		}
+	}
+}
+
+[data-fls-darklite-light] {
+	.menu {
+		&__link {
+			color: #334155;
+			@media (any-hover: hover) {
+				&:hover {
+					color: #0f172a;
+				}
+			}
+		}
+
+		&__langs,
+		&__theme {
+			border-color: rgba(51, 65, 85, 0.2);
+			background: rgba(241, 245, 249, 0.9);
+		}
+
+		&__theme {
+			color: #0f172a;
+		}
+	}
+
+	.icon-menu {
+		span,
+		&::before,
+		&::after {
+			background-color: #334155;
 		}
 	}
 }

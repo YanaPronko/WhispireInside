@@ -1,5 +1,32 @@
-<header data-fls-header class="header">
+<header data-fls-header data-fls-darklite class="header">
 	<div class="header__container">
-		<!-- <include src="@components/layout/menu/menu.html" locals='{"active":"[[active]]"}'></include> -->
+		<a href="#hero" data-fls-scrollto data-fls-scrollto-header class="header__brand" aria-label="Шепот внутри">
+			<img class="header__brand-icon" src="assets/svgicons/logo-mark.svg" alt="" width="24" height="24">
+			<span class="header__brand-text">Шепот внутри</span>
+		</a>
+		<div class="header__menu menu">
+			<button type="button" data-fls-menu class="menu__icon icon-menu" aria-label="Открыть меню"><span></span></button>
+			<nav class="menu__body" aria-label="Основная навигация">
+				<ul class="menu__list">
+					<li class="menu__item"><a href="#about" data-fls-scrollto data-fls-scrollto-header class="menu__link">О психологе</a></li>
+					<li class="menu__item"><a href="#services" data-fls-scrollto data-fls-scrollto-header class="menu__link">Услуги</a></li>
+					<li class="menu__item"><a href="#testimonials" data-fls-scrollto data-fls-scrollto-header class="menu__link">Отзывы</a></li>
+					<li class="menu__item"><a href="#contact" data-fls-scrollto data-fls-scrollto-header class="menu__link">Контакты</a></li>
+				</ul>
+				<div class="menu__controls">
+					<div class="menu__langs" aria-label="Выбор языка">
+						<button type="button" class="menu__lang --active" data-fls-lang="ru">RU</button>
+						<button type="button" class="menu__lang" data-fls-lang="en">EN</button>
+					</div>
+					<button type="button" class="menu__theme" data-fls-darklite-set aria-label="Сменить тему">
+						Theme
+					</button>
+				</div>
+				<a href="#contact" data-fls-scrollto data-fls-scrollto-header class="menu__button">
+					<img src="assets/svgicons/sparkle-icon.svg" alt="" width="16" height="16">
+					<span>Записаться</span>
+				</a>
+			</nav>
+		</div>
 	</div>
 </header>
