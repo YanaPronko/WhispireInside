@@ -28,12 +28,84 @@ import { b as bodyLockToggle, a as bodyLockStatus, c as bodyUnlock, g as gotoBlo
     fetch(link.href, fetchOpts);
   }
 })();
+const scriptRel = "modulepreload";
+const assetsURL = function(dep, importerUrl) {
+  return new URL(dep, importerUrl).href;
+};
+const seen = {};
+const __vitePreload = function preload(baseModule, deps, importerUrl) {
+  let promise = Promise.resolve();
+  if (deps && deps.length > 0) {
+    let allSettled = function(promises$2) {
+      return Promise.all(promises$2.map((p) => Promise.resolve(p).then((value$1) => ({
+        status: "fulfilled",
+        value: value$1
+      }), (reason) => ({
+        status: "rejected",
+        reason
+      }))));
+    };
+    const links = document.getElementsByTagName("link");
+    const cspNonceMeta = document.querySelector("meta[property=csp-nonce]");
+    const cspNonce = cspNonceMeta?.nonce || cspNonceMeta?.getAttribute("nonce");
+    promise = allSettled(deps.map((dep) => {
+      dep = assetsURL(dep, importerUrl);
+      if (dep in seen) return;
+      seen[dep] = true;
+      const isCss = dep.endsWith(".css");
+      const cssSelector = isCss ? '[rel="stylesheet"]' : "";
+      if (!!importerUrl) for (let i$1 = links.length - 1; i$1 >= 0; i$1--) {
+        const link$1 = links[i$1];
+        if (link$1.href === dep && (!isCss || link$1.rel === "stylesheet")) return;
+      }
+      else if (document.querySelector(`link[href="${dep}"]${cssSelector}`)) return;
+      const link = document.createElement("link");
+      link.rel = isCss ? "stylesheet" : scriptRel;
+      if (!isCss) link.as = "script";
+      link.crossOrigin = "";
+      link.href = dep;
+      if (cspNonce) link.setAttribute("nonce", cspNonce);
+      document.head.appendChild(link);
+      if (isCss) return new Promise((res, rej) => {
+        link.addEventListener("load", res);
+        link.addEventListener("error", () => rej(/* @__PURE__ */ new Error(`Unable to preload CSS for ${dep}`)));
+      });
+    }));
+  }
+  function handlePreloadError(err$2) {
+    const e$1 = new Event("vite:preloadError", { cancelable: true });
+    e$1.payload = err$2;
+    window.dispatchEvent(e$1);
+    if (!e$1.defaultPrevented) throw err$2;
+  }
+  return promise.then((res) => {
+    for (const item of res || []) {
+      if (item.status !== "rejected") continue;
+      handlePreloadError(item.reason);
+    }
+    return baseModule().catch(handlePreloadError);
+  });
+};
+const initHeroParallax = async () => {
+  const hasHeroParallax = document.querySelector("[data-fls-parallax-parent]");
+  if (!hasHeroParallax) return;
+  const enableParallax = window.matchMedia("(min-width: 992px)").matches && window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  if (!enableParallax) {
+    document.querySelectorAll("[data-fls-parallax-parent],[data-fls-parallax]").forEach((el) => {
+      el.removeAttribute("data-fls-parallax-parent");
+      el.removeAttribute("data-fls-parallax");
+    });
+    return;
+  }
+  await __vitePreload(() => Promise.resolve().then(() => parallax), true ? void 0 : void 0, import.meta.url);
+};
 const initHeroScrollArrow = () => {
   const hero = document.querySelector(".hero");
   const arrow = document.querySelector("[data-hero-scroll]");
   const content = document.querySelector(".hero__content");
   if (!hero || !arrow) return;
-  const onScroll = () => {
+  let ticking = false;
+  const update = () => {
     const scrollY = window.scrollY || 0;
     const limit = Math.max(hero.offsetHeight * 0.5, 240);
     const progress = Math.min(scrollY / limit, 1);
@@ -45,11 +117,19 @@ const initHeroScrollArrow = () => {
       content.style.opacity = `${1 - contentProgress}`;
       content.style.transform = `translateY(${contentProgress * 28}px)`;
     }
+    ticking = false;
   };
-  onScroll();
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+  update();
   window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
 };
 window.addEventListener("load", initHeroScrollArrow);
+window.addEventListener("load", initHeroParallax);
 function menuInit() {
   document.addEventListener("click", function(e) {
     if (bodyLockStatus && e.target.closest("[data-fls-menu]")) {
@@ -195,3 +275,87 @@ const initLangSwitcher = () => {
   });
 };
 window.addEventListener("load", initLangSwitcher);
+class Parallax {
+  constructor(elements) {
+    if (elements.length) {
+      this.elements = Array.from(elements).map((el) => new Parallax.Each(el, this.options));
+    }
+  }
+  destroyEvents() {
+    this.elements.forEach((el) => {
+      el.destroyEvents();
+    });
+  }
+  setEvents() {
+    this.elements.forEach((el) => {
+      el.setEvents();
+    });
+  }
+}
+Parallax.Each = class {
+  constructor(parent) {
+    this.parent = parent;
+    this.elements = this.parent.querySelectorAll("[data-fls-parallax]");
+    this.animation = this.animationFrame.bind(this);
+    this.offset = 0;
+    this.value = 0;
+    this.smooth = parent.dataset.flsParallaxSmooth ? Number(parent.dataset.flsParallaxSmooth) : 15;
+    this.setEvents();
+  }
+  setEvents() {
+    this.animationID = window.requestAnimationFrame(this.animation);
+  }
+  destroyEvents() {
+    window.cancelAnimationFrame(this.animationID);
+  }
+  animationFrame() {
+    const topToWindow = this.parent.getBoundingClientRect().top;
+    const heightParent = this.parent.offsetHeight;
+    const heightWindow = window.innerHeight;
+    const positionParent = {
+      top: topToWindow - heightWindow,
+      bottom: topToWindow + heightParent
+    };
+    const centerPoint = this.parent.dataset.flsParallaxCenter ? this.parent.dataset.flsParallaxCenter : "center";
+    if (positionParent.top < 30 && positionParent.bottom > -30) {
+      switch (centerPoint) {
+        // верхній точці (початок батька стикається верхнього краю екрану)
+        case "top":
+          this.offset = -1 * topToWindow;
+          break;
+        // центрі екрана (середина батька у середині екрана)
+        case "center":
+          this.offset = heightWindow / 2 - (topToWindow + heightParent / 2);
+          break;
+        // Початок: нижня частина екрана = верхня частина батька
+        case "bottom":
+          this.offset = heightWindow - (topToWindow + heightParent);
+          break;
+      }
+    }
+    this.value += (this.offset - this.value) / this.smooth;
+    this.animationID = window.requestAnimationFrame(this.animation);
+    this.elements.forEach((el) => {
+      const parameters = {
+        axis: el.dataset.axis ? el.dataset.axis : "v",
+        direction: el.dataset.flsParallaxDirection ? el.dataset.flsParallaxDirection + "1" : "-1",
+        coefficient: el.dataset.flsParallaxCoefficient ? Number(el.dataset.flsParallaxCoefficient) : 5,
+        additionalProperties: el.dataset.flsParallaxProperties ? el.dataset.flsParallaxProperties : ""
+      };
+      this.parameters(el, parameters);
+    });
+  }
+  parameters(el, parameters) {
+    if (parameters.axis == "v") {
+      el.style.transform = `translate3D(0, ${(parameters.direction * (this.value / parameters.coefficient)).toFixed(2)}px,0) ${parameters.additionalProperties}`;
+    } else if (parameters.axis == "h") {
+      el.style.transform = `translate3D(${(parameters.direction * (this.value / parameters.coefficient)).toFixed(2)}px,0,0) ${parameters.additionalProperties}`;
+    }
+  }
+};
+if (document.querySelector("[data-fls-parallax-parent]")) {
+  new Parallax(document.querySelectorAll("[data-fls-parallax-parent]"));
+}
+const parallax = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null
+}, Symbol.toStringTag, { value: "Module" }));
