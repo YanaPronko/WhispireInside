@@ -1,0 +1,7 @@
+{
+  "i18n-ally.localesPaths": [
+    "template_modules/languages",
+    "src/components/wordpress/fls-theme/languages",
+    "src/php/sendmail/phpmailer/language"
+  ]
+}
