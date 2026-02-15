@@ -1,4 +1,4 @@
-<?
+﻿<?php
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -11,13 +11,12 @@ require 'phpmailer/src/SMTP.php';
 $mail = new PHPMailer(true);
 $mail->CharSet = 'UTF-8';
 $mail->setLanguage('uk', 'phpmailer/language/');
-$mail->IsHTML(true);
+$mail->isHTML(true);
 
-$mail->isSMTP(); // Send using SMTP
-$mail->Host = 'smtp.gmail.com'; // Set the SMTP server to send through
-$mail->SMTPAuth = true; // Enable SMTP authentication
-$mail->Username = ''; // SMTP username (email)
-$mail->Password = ''; // SMTP password (Google Account -> Security -> App passwords -> Add)
-
+$mail->isSMTP();
+$mail->Host = 'smtp.gmail.com';
+$mail->SMTPAuth = true;
+$mail->Username = 'yaniarz89@gmail.com'; // SMTP email
+$mail->Password = 'jmzg xofw biut feeg'; // SMTP app password
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 $mail->Port = 465;

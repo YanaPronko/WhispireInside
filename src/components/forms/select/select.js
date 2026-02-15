@@ -521,5 +521,14 @@ class SelectConstructor {
 		}));
 	}
 }
-document.querySelector('select[data-fls-select]') ?
-	window.addEventListener('load', () => window.flsSelect = new SelectConstructor({})) : null
+const initFlsSelect = () => {
+	if (!document.querySelector('select[data-fls-select]')) return;
+	if (window.flsSelect) return;
+	window.flsSelect = new SelectConstructor({});
+};
+
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+	initFlsSelect();
+} else {
+	window.addEventListener('load', initFlsSelect);
+}

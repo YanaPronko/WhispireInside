@@ -1,45 +1,72 @@
-<?php
-// Налаштування відправки
+﻿<?php
 require 'config.php';
 
-//Від кого лист
-$mail->setFrom('some@gmail.com', 'Лист від ЧФ4'); // Вказати потрібний E-mail
-//Кому відправити
-$mail->addAddress('some@gmail.com'); // Вказати потрібний E-mail
-//Тема листа
-$mail->Subject = 'Вітання! Це Чертоги Фрілансера 4';
-
-//Тіло листа
-$body = '<h1>Зустрічайте супер листа!</h1>';
-
-//if(trim(!empty($_POST['email']))){
-//$body.=$_POST['email'];
-//}	
-
-/*
-	//Прикріпити файл
-	if (!empty($_FILES['image']['tmp_name'])) {
-		//шлях завантаження файлу
-		$filePath = __DIR__ . "/files/sendmail/attachments/" . $_FILES['image']['name']; 
-		//грузимо файл
-		if (copy($_FILES['image']['tmp_name'], $filePath)){
-			$fileAttach = $filePath;
-			$body.='<p><strong>Фото у додатку</strong>';
-			$mail->addAttachment($fileAttach);
-		}
-	}
-	*/
-
-$mail->Body = $body;
-
-//Відправляємо
-if (!$mail->send()) {
-	$message = 'Помилка';
-} else {
-	$message = 'Дані надіслані!';
+function cleanValue($value)
+{
+	return htmlspecialchars(trim((string) $value));
 }
 
-$response = ['message' => $message];
+$serviceType = cleanValue($_POST['service_type'] ?? '');
+$name = cleanValue($_POST['name'] ?? '');
+$desiredDate = cleanValue($_POST['desired_date'] ?? '');
+$phone = cleanValue($_POST['phone'] ?? '');
+$email = cleanValue($_POST['email'] ?? '');
+$messageText = cleanValue($_POST['message'] ?? '');
 
-header('Content-type: application/json');
-echo json_encode($response);
+$errors = [];
+
+if ($serviceType === '') {
+	$errors[] = 'Не выбрана услуга.';
+}
+if ($name === '') {
+	$errors[] = 'Не указано имя.';
+}
+if ($desiredDate === '') {
+	$errors[] = 'Не выбрана дата.';
+}
+if ($phone === '') {
+	$errors[] = 'Не указан телефон.';
+} else {
+	$phoneDigits = preg_replace('/\D+/', '', $phone);
+	if (strlen($phoneDigits) < 11) {
+		$errors[] = 'Телефон указан некорректно.';
+	}
+}
+if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	$errors[] = 'Email указан некорректно.';
+}
+
+if (!empty($errors)) {
+	header('Content-type: application/json; charset=UTF-8');
+	echo json_encode([
+		'message' => implode(' ', $errors),
+	]);
+	exit;
+}
+
+try {
+	$mail->setFrom($mail->Username, 'Шепот внутри');
+	$mail->addAddress('yaniarz89@gmail.com');
+	$mail->Subject = 'Новая заявка на консультацию';
+
+	$body = '<h1>Новая заявка с сайта</h1>';
+	$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
+	$body .= '<p><strong>Имя:</strong> ' . $name . '</p>';
+	$body .= '<p><strong>Желаемая дата:</strong> ' . $desiredDate . '</p>';
+	$body .= '<p><strong>Телефон:</strong> ' . $phone . '</p>';
+	$body .= '<p><strong>Email:</strong> ' . $email . '</p>';
+	if ($messageText !== '') {
+		$body .= '<p><strong>Сообщение:</strong><br>' . nl2br($messageText) . '</p>';
+	}
+
+	$mail->Body = $body;
+	$mail->send();
+	$responseMessage = 'Заявка отправлена. Спасибо!';
+} catch (Throwable $e) {
+	$responseMessage = 'Не удалось отправить заявку. Проверьте настройки SMTP.';
+}
+
+header('Content-type: application/json; charset=UTF-8');
+echo json_encode([
+	'message' => $responseMessage,
+]);
