@@ -1,24 +1,24 @@
-// Підключення функціоналу "Чертоги Фрілансера"
+﻿// РџС–РґРєР»СЋС‡РµРЅРЅСЏ С„СѓРЅРєС†С–РѕРЅР°Р»Сѓ "Р§РµСЂС‚РѕРіРё Р¤СЂС–Р»Р°РЅСЃРµСЂР°"
 import { gotoBlock, FLS } from "@js/common/functions.js";
-// Підключення функціоналу модуля форм
+// РџС–РґРєР»СЋС‡РµРЅРЅСЏ С„СѓРЅРєС†С–РѕРЅР°Р»Сѓ РјРѕРґСѓР»СЏ С„РѕСЂРј
 import { formValidate } from "../_functions.js";
 
 import './form.scss'
 
 function formInit() {
-	// Відправлення форм
+	// Р’С–РґРїСЂР°РІР»РµРЅРЅСЏ С„РѕСЂРј
 	function formSubmit() {
 		const forms = document.forms;
 		if (forms.length) {
 			for (const form of forms) {
-				// Прибираємо вбудовану валідацію
+				// РџСЂРёР±РёСЂР°С”РјРѕ РІР±СѓРґРѕРІР°РЅСѓ РІР°Р»С–РґР°С†С–СЋ
 				!form.hasAttribute('data-fls-form-novalidate') ? form.setAttribute('novalidate', true) : null
-				// Подія відправки
+				// РџРѕРґС–СЏ РІС–РґРїСЂР°РІРєРё
 				form.addEventListener('submit', function (e) {
 					const form = e.target;
 					formSubmitAction(form, e);
 				});
-				// Подія очистки
+				// РџРѕРґС–СЏ РѕС‡РёСЃС‚РєРё
 				form.addEventListener('reset', function (e) {
 					const form = e.target;
 					formValidate.formClean(form);
@@ -28,7 +28,7 @@ function formInit() {
 		async function formSubmitAction(form, e) {
 			const error = formValidate.getErrors(form)
 			if (error === 0) {
-				if (form.dataset.flsForm === 'ajax') { // Якщо режим ajax
+				if (form.dataset.flsForm === 'ajax') { // РЇРєС‰Рѕ СЂРµР¶РёРј ajax
 					e.preventDefault();
 					const formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
 					const formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
@@ -39,14 +39,22 @@ function formInit() {
 						body: formData
 					});
 					if (response.ok) {
-						let responseResult = await response.json()
+						const responseText = await response.text();
+						let responseResult;
+						try {
+							const safeText = responseText.replace(/^\uFEFF/, '').trim();
+							responseResult = JSON.parse(safeText);
+						} catch (parseError) {
+							responseResult = { message: 'Сервер вернул некорректный JSON ответ.' };
+							console.error(parseError, responseText);
+						}
 						form.classList.remove('--sending')
 						formSent(form, responseResult)
 					} else {
 						FLS("_FLS_FORM_AJAX_ERR")
 						form.classList.remove('--sending')
 					}
-				} else if (form.dataset.flsForm === 'dev') {	// Якщо режим розробки
+				} else if (form.dataset.flsForm === 'dev') {	// РЇРєС‰Рѕ СЂРµР¶РёРј СЂРѕР·СЂРѕР±РєРё
 					e.preventDefault()
 					formSent(form)
 				}
@@ -58,29 +66,29 @@ function formInit() {
 				}
 			}
 		}
-		// Дії після надсилання форми
+		// Р”С–С— РїС–СЃР»СЏ РЅР°РґСЃРёР»Р°РЅРЅСЏ С„РѕСЂРјРё
 		function formSent(form, responseResult = ``) {
-			// Створюємо подію відправлення форми
+			// РЎС‚РІРѕСЂСЋС”РјРѕ РїРѕРґС–СЋ РІС–РґРїСЂР°РІР»РµРЅРЅСЏ С„РѕСЂРјРё
 			document.dispatchEvent(new CustomEvent("formSent", {
 				detail: {
 					form: form
 				}
 			}));
-			// Показуємо попап, якщо підключено модуль попапів 
-			// та для форми вказано налаштування
+			// РџРѕРєР°Р·СѓС”РјРѕ РїРѕРїР°Рї, СЏРєС‰Рѕ РїС–РґРєР»СЋС‡РµРЅРѕ РјРѕРґСѓР»СЊ РїРѕРїР°РїС–РІ 
+			// С‚Р° РґР»СЏ С„РѕСЂРјРё РІРєР°Р·Р°РЅРѕ РЅР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ
 			setTimeout(() => {
 				if (window.flsPopup) {
 					const popup = form.dataset.flsFormPopup;
 					popup ? window.flsPopup.open(popup) : null;
 				}
 			}, 0);
-			// Очищуємо форму
+			// РћС‡РёС‰СѓС”РјРѕ С„РѕСЂРјСѓ
 			formValidate.formClean(form);
-			// Повідомляємо до консолі
+			// РџРѕРІС–РґРѕРјР»СЏС”РјРѕ РґРѕ РєРѕРЅСЃРѕР»С–
 			FLS(`_FLS_FORM_SEND`);
 		}
 	}
-	// Робота із полями форми.
+	// Р РѕР±РѕС‚Р° С–Р· РїРѕР»СЏРјРё С„РѕСЂРјРё.
 	function formFieldsInit() {
 		document.body.addEventListener("focusin", function (e) {
 			const targetElement = e.target;
@@ -99,7 +107,7 @@ function formInit() {
 					targetElement.classList.remove('--form-focus');
 					targetElement.parentElement.classList.remove('--form-focus');
 				}
-				// Миттєва валідація
+				// РњРёС‚С‚С”РІР° РІР°Р»С–РґР°С†С–СЏ
 				targetElement.hasAttribute('data-fls-form-validatenow') ? formValidate.validateInput(targetElement) : null;
 			}
 		});

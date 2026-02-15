@@ -1,5 +1,14 @@
-﻿<?php
-require 'config.php';
+<?php
+require __DIR__ . '/config.php';
+
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+header('Content-type: application/json; charset=UTF-8');
+ob_start();
+
+set_error_handler(static function ($severity, $message, $file, $line) {
+	throw new ErrorException($message, 0, $severity, $file, $line);
+});
 
 function cleanValue($value)
 {
@@ -37,7 +46,10 @@ if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 if (!empty($errors)) {
-	header('Content-type: application/json; charset=UTF-8');
+	if (ob_get_length()) {
+		ob_clean();
+	}
+	restore_error_handler();
 	echo json_encode([
 		'message' => implode(' ', $errors),
 	]);
@@ -45,9 +57,13 @@ if (!empty($errors)) {
 }
 
 try {
-	$mail->setFrom($mail->Username, 'Шепот внутри');
-	$mail->addAddress('yaniarz89@gmail.com');
-	$mail->Subject = 'Новая заявка на консультацию';
+	$fromName = getenv('SMTP_FROM_NAME') ?: 'Шепот внутри';
+	$toEmail = getenv('SMTP_TO') ?: $mail->Username;
+	$mailSubject = getenv('SMTP_SUBJECT') ?: 'Новая заявка на консультацию';
+
+	$mail->setFrom($mail->Username, $fromName);
+	$mail->addAddress($toEmail);
+	$mail->Subject = $mailSubject;
 
 	$body = '<h1>Новая заявка с сайта</h1>';
 	$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
@@ -63,10 +79,13 @@ try {
 	$mail->send();
 	$responseMessage = 'Заявка отправлена. Спасибо!';
 } catch (Throwable $e) {
-	$responseMessage = 'Не удалось отправить заявку. Проверьте настройки SMTP.';
+	$responseMessage = 'Не удалось отправить заявку. SMTP: ' . ($mail->ErrorInfo ?: $e->getMessage());
 }
 
-header('Content-type: application/json; charset=UTF-8');
+restore_error_handler();
+if (ob_get_length()) {
+	ob_clean();
+}
 echo json_encode([
 	'message' => $responseMessage,
 ]);

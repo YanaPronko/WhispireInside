@@ -95,12 +95,12 @@ export default {
 		vue: false
 	},
 	php: {
-		enable: false,
+		enable: true,
 		base: "./src/php/",
 		hostname: 'localhost',
 		port: '1110',
-		binary: 'C:\\php\\php.exe',
-		ini: 'template_modules/assets/php.ini',
+		binary: 'C:\\Install\\php-8.5.1-Win32-vs17-x64\\php.exe',
+		ini: 'C:\\Install\\php-8.5.1-Win32-vs17-x64\\php.ini',
 	},
 	pug: {
 		enable: false,

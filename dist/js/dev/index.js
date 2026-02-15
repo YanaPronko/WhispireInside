@@ -7183,7 +7183,15 @@ function formInit() {
             body: formData
           });
           if (response.ok) {
-            let responseResult = await response.json();
+            const responseText = await response.text();
+            let responseResult;
+            try {
+              const safeText = responseText.replace(/^\uFEFF/, "").trim();
+              responseResult = JSON.parse(safeText);
+            } catch (parseError) {
+              responseResult = { message: "Сервер вернул некорректный JSON ответ." };
+              console.error(parseError, responseText);
+            }
             form.classList.remove("--sending");
             formSent(form, responseResult);
           } else {

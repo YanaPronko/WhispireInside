@@ -1,5 +1,14 @@
-﻿<?php
-require 'config.php';
+<?php
+require __DIR__ . '/config.php';
+
+ini_set('display_errors', '0');
+error_reporting(E_ALL);
+header('Content-type: application/json; charset=UTF-8');
+ob_start();
+
+set_error_handler(static function ($severity, $message, $file, $line) {
+	throw new ErrorException($message, 0, $severity, $file, $line);
+});
 
 function cleanValue($value)
 {
@@ -26,43 +35,53 @@ if ($desiredDate === '') {
 }
 if ($phone === '') {
 	$errors[] = 'Не указан телефон.';
+} else {
+	$phoneDigits = preg_replace('/\D+/', '', $phone);
+	if (strlen($phoneDigits) < 11) {
+		$errors[] = 'Телефон указан некорректно.';
+	}
 }
 if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 	$errors[] = 'Email указан некорректно.';
 }
 
 if (!empty($errors)) {
-	header('Content-type: application/json; charset=UTF-8');
+	if (ob_get_length()) {
+		ob_clean();
+	}
+	restore_error_handler();
 	echo json_encode([
 		'message' => implode(' ', $errors),
 	]);
 	exit;
 }
 
-$mail->setFrom('no-reply@whispersinside.site', 'Шепот внутри');
-$mail->addAddress('yaniarz89@gmail.com');
-$mail->Subject = 'Новая заявка на консультацию';
-
-$body = '<h1>Новая заявка с сайта</h1>';
-$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
-$body .= '<p><strong>Имя:</strong> ' . $name . '</p>';
-$body .= '<p><strong>Желаемая дата:</strong> ' . $desiredDate . '</p>';
-$body .= '<p><strong>Телефон:</strong> ' . $phone . '</p>';
-$body .= '<p><strong>Email:</strong> ' . $email . '</p>';
-if ($messageText !== '') {
-	$body .= '<p><strong>Сообщение:</strong><br>' . nl2br($messageText) . '</p>';
-}
-
-$mail->Body = $body;
-
 try {
+	$mail->setFrom($mail->Username, 'Шепот внутри');
+	$mail->addAddress('yaniarz89@gmail.com');
+	$mail->Subject = 'Новая заявка на консультацию';
+
+	$body = '<h1>Новая заявка с сайта</h1>';
+	$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
+	$body .= '<p><strong>Имя:</strong> ' . $name . '</p>';
+	$body .= '<p><strong>Желаемая дата:</strong> ' . $desiredDate . '</p>';
+	$body .= '<p><strong>Телефон:</strong> ' . $phone . '</p>';
+	$body .= '<p><strong>Email:</strong> ' . $email . '</p>';
+	if ($messageText !== '') {
+		$body .= '<p><strong>Сообщение:</strong><br>' . nl2br($messageText) . '</p>';
+	}
+
+	$mail->Body = $body;
 	$mail->send();
 	$responseMessage = 'Заявка отправлена. Спасибо!';
-} catch (Exception $e) {
+} catch (Throwable $e) {
 	$responseMessage = 'Не удалось отправить заявку. Проверьте настройки SMTP.';
 }
 
-header('Content-type: application/json; charset=UTF-8');
+restore_error_handler();
+if (ob_get_length()) {
+	ob_clean();
+}
 echo json_encode([
 	'message' => $responseMessage,
 ]);
