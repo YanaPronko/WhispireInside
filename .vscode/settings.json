@@ -1,7 +1,11 @@
 {
   "viteHtmlComponentCreator.defaultImports": {
-    "html_imports": ["<link rel='stylesheet' href='@components/{component}/{component}.scss'>"],
-    "scss_imports": [""]
+    "html_imports": [
+      "<link rel='stylesheet' href='@components/{component}/{component}.scss'>"
+    ],
+    "scss_imports": [
+      ""
+    ]
   },
   "path-autocomplete.pathMappings": {
     "@components": "${folder}/src/components",
@@ -12,10 +16,5 @@
     "@video": "${folder}/src/assets/video",
     "@files": "${folder}/src/files",
     "@pug": "${folder}/src/pug"
-  },
-  "i18n-ally.localesPaths": [
-    "template_modules/languages",
-    "src/components/wordpress/fls-theme/languages",
-    "src/php/sendmail/phpmailer/language"
-  ]
+  }
 }

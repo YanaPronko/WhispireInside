@@ -305,9 +305,9 @@
 	.menu {
 		&__body {
 			@media (max-width: 767.98px) {
-				background: rgba(191, 224, 236, 0.97);
+				background: #d7edf7;
 				&::before {
-					background: rgba(191, 224, 236, 0.99);
+					background: #d7edf7;
 				}
 			}
 		}
@@ -315,6 +315,7 @@
 		&__link {
 			color: #f8fafc;
 			text-shadow: 0 1px 10px rgba(2, 6, 23, 0.45);
+			font-weight: 600;
 			&:hover,
 			&:focus-visible {
 				color: #fbbf24;
@@ -328,7 +329,7 @@
 		&__langs,
 		&__theme {
 			border-color: #5f97af;
-			background: rgba(154, 201, 219, 0.7);
+			background: #c8e2ee;
 		}
 
 		&__theme {
@@ -336,7 +337,7 @@
 			&:hover,
 			&:focus-visible {
 				border-color: #094d6f;
-				background: rgba(154, 201, 219, 0.9);
+				background: #b8d9e8;
 			}
 		}
 
