@@ -1,4 +1,4 @@
-// Підключення функціоналу "Чертоги Фрілансера"
+﻿// Підключення функціоналу "Чертоги Фрілансера"
 import { isMobile, gotoBlock, getHash, FLS, bodyUnlock } from "@js/common/functions.js";
 
 // Плавна навігація по сторінці
@@ -13,19 +13,26 @@ export function pageNavigation() {
 			const targetElement = e.target;
 			if (targetElement.closest('[data-fls-scrollto]')) {
 				const gotoLink = targetElement.closest('[data-fls-scrollto]');
-				const gotoLinkSelector = gotoLink.dataset.flsScrollto ? gotoLink.dataset.flsScrollto : '';
+				const dataSelector = gotoLink.dataset.flsScrollto ? gotoLink.dataset.flsScrollto.trim() : '';
+				const hrefSelector = gotoLink.getAttribute('href')?.startsWith('#') ? gotoLink.getAttribute('href') : '';
+				const gotoLinkSelector = dataSelector || hrefSelector;
+				if (!gotoLinkSelector) return;
+
 				const noHeader = gotoLink.hasAttribute('data-fls-scrollto-header') ? true : false;
 				const gotoSpeed = gotoLink.dataset.flsScrolltoSpeed ? gotoLink.dataset.flsScrolltoSpeed : 500;
 				const offsetTop = gotoLink.dataset.flsScrolltoTop ? parseInt(gotoLink.dataset.flsScrolltoTop) : 0;
+
 				if (window.fullpage) {
-					const fullpageSection = document.querySelector(`${gotoLinkSelector}`).closest('[data-fls-fullpage-section]');
+					const fullpageTarget = document.querySelector(`${gotoLinkSelector}`);
+					if (!fullpageTarget) return;
+					const fullpageSection = fullpageTarget.closest('[data-fls-fullpage-section]');
 					const fullpageSectionId = fullpageSection ? +fullpageSection.dataset.flsFullpageId : null;
 					if (fullpageSectionId !== null) {
 						window.fullpage.switchingSection(fullpageSectionId);
 						// Закриваємо меню, якщо воно відкрите
 						if (document.documentElement.hasAttribute("data-fls-menu-open")) {
-							bodyUnlock()
-							document.documentElement.removeAttribute("data-fls-menu-open")
+							bodyUnlock(0);
+							document.documentElement.removeAttribute("data-fls-menu-open");
 						}
 					}
 				} else {

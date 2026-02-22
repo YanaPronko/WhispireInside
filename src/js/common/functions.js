@@ -1,4 +1,4 @@
-// FLS (Full Logging System)
+﻿// FLS (Full Logging System)
 export function FLS(text, vars = '') {
 	if (flsLogging) {
 		if (flsLang[text]) {
@@ -20,14 +20,14 @@ export function FLS(text, vars = '') {
 		}, 0);
 	}
 }
-/* Перевірка мобільного браузера */
+/* РџРµСЂРµРІС–СЂРєР° РјРѕР±С–Р»СЊРЅРѕРіРѕ Р±СЂР°СѓР·РµСЂР° */
 export const isMobile = { Android: function () { return navigator.userAgent.match(/Android/i); }, BlackBerry: function () { return navigator.userAgent.match(/BlackBerry/i); }, iOS: function () { return navigator.userAgent.match(/iPhone|iPad|iPod/i); }, Opera: function () { return navigator.userAgent.match(/Opera Mini/i); }, Windows: function () { return navigator.userAgent.match(/IEMobile/i); }, any: function () { return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()); } };
-/* Додавання класу touch для HTML, якщо браузер мобільний */
+/* Р”РѕРґР°РІР°РЅРЅСЏ РєР»Р°СЃСѓ touch РґР»СЏ HTML, СЏРєС‰Рѕ Р±СЂР°СѓР·РµСЂ РјРѕР±С–Р»СЊРЅРёР№ */
 export function addTouchAttr() {
-	// Додавання data-fls-touch для HTML, якщо браузер мобільний
+	// Р”РѕРґР°РІР°РЅРЅСЏ data-fls-touch РґР»СЏ HTML, СЏРєС‰Рѕ Р±СЂР°СѓР·РµСЂ РјРѕР±С–Р»СЊРЅРёР№
 	if (isMobile.any()) document.documentElement.setAttribute('data-fls-touch', '')
 }
-// Додавання loaded для HTML після повного завантаження сторінки
+// Р”РѕРґР°РІР°РЅРЅСЏ loaded РґР»СЏ HTML РїС–СЃР»СЏ РїРѕРІРЅРѕРіРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё
 export function addLoadedAttr() {
 	if (!document.documentElement.hasAttribute('data-fls-preloader-loading')) {
 		window.addEventListener("load", function () {
@@ -37,16 +37,16 @@ export function addLoadedAttr() {
 		});
 	}
 }
-// Отримання хешу на адресі сайту
+// РћС‚СЂРёРјР°РЅРЅСЏ С…РµС€Сѓ РЅР° Р°РґСЂРµСЃС– СЃР°Р№С‚Сѓ
 export function getHash() {
 	if (location.hash) { return location.hash.replace('#', ''); }
 }
-// Вказівка хеша на адресу сайту
+// Р’РєР°Р·С–РІРєР° С…РµС€Р° РЅР° Р°РґСЂРµСЃСѓ СЃР°Р№С‚Сѓ
 export function setHash(hash) {
 	hash = hash ? `#${hash}` : window.location.href.split('#')[0];
 	history.pushState('', '', hash);
 }
-// Допоміжні модулі плавного розкриття та закриття об'єкта
+// Р”РѕРїРѕРјС–Р¶РЅС– РјРѕРґСѓР»С– РїР»Р°РІРЅРѕРіРѕ СЂРѕР·РєСЂРёС‚С‚СЏ С‚Р° Р·Р°РєСЂРёС‚С‚СЏ РѕР±'С”РєС‚Р°
 export let slideUp = (target, duration = 500, showmore = 0) => {
 	if (!target.classList.contains('--slide')) {
 		target.classList.add('--slide');
@@ -71,7 +71,7 @@ export let slideUp = (target, duration = 500, showmore = 0) => {
 			target.style.removeProperty('transition-duration');
 			target.style.removeProperty('transition-property');
 			target.classList.remove('--slide');
-			// Створюємо подію 
+			// РЎС‚РІРѕСЂСЋС”РјРѕ РїРѕРґС–СЋ 
 			document.dispatchEvent(new CustomEvent("slideUpDone", {
 				detail: {
 					target: target
@@ -106,7 +106,7 @@ export let slideDown = (target, duration = 500, showmore = 0) => {
 			target.style.removeProperty('transition-duration');
 			target.style.removeProperty('transition-property');
 			target.classList.remove('--slide');
-			// Створюємо подію
+			// РЎС‚РІРѕСЂСЋС”РјРѕ РїРѕРґС–СЋ
 			document.dispatchEvent(new CustomEvent("slideDownDone", {
 				detail: {
 					target: target
@@ -122,7 +122,7 @@ export let slideToggle = (target, duration = 500) => {
 		return slideUp(target, duration);
 	}
 }
-// Допоміжні модулі блокування прокручування та стрибка
+// Р”РѕРїРѕРјС–Р¶РЅС– РјРѕРґСѓР»С– Р±Р»РѕРєСѓРІР°РЅРЅСЏ РїСЂРѕРєСЂСѓС‡СѓРІР°РЅРЅСЏ С‚Р° СЃС‚СЂРёР±РєР°
 export let bodyLockStatus = true
 export let bodyLockToggle = (delay = 500) => {
 	if (document.documentElement.hasAttribute("data-fls-scrolllock")) {
@@ -164,38 +164,38 @@ export let bodyLock = (delay = 500) => {
 		}, delay)
 	}
 }
-// Отримати ім'я по значенню в об'єкті
+// РћС‚СЂРёРјР°С‚Рё С–Рј'СЏ РїРѕ Р·РЅР°С‡РµРЅРЅСЋ РІ РѕР±'С”РєС‚С–
 export function getKeyByValue(object, value) {
 	return Object.keys(object).find(key => object[key] === value);
 }
-// Отримати цифри з рядка
+// РћС‚СЂРёРјР°С‚Рё С†РёС„СЂРё Р· СЂСЏРґРєР°
 export function getDigFromString(item) {
 	return parseInt(item.replace(/[^\d]/g, ''))
 }
-// Форматування цифр типу 100 000 000
+// Р¤РѕСЂРјР°С‚СѓРІР°РЅРЅСЏ С†РёС„СЂ С‚РёРїСѓ 100 000 000
 export function getDigFormat(item, sepp = ' ') {
 	return item.toString().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, `$1${sepp}`);
 }
-// Прибрати клас з усіх елементів масиву
+// РџСЂРёР±СЂР°С‚Рё РєР»Р°СЃ Р· СѓСЃС–С… РµР»РµРјРµРЅС‚С–РІ РјР°СЃРёРІСѓ
 export function removeClasses(array, className) {
 	for (var i = 0; i < array.length; i++) {
 		array[i].classList.remove(className);
 	}
 }
-// Унікалізація масиву
+// РЈРЅС–РєР°Р»С–Р·Р°С†С–СЏ РјР°СЃРёРІСѓ
 export function uniqArray(array) {
 	return array.filter((item, index, self) => self.indexOf(item) === index)
 }
-// Функція отримання індексу всередині батьківського елемента
+// Р¤СѓРЅРєС†С–СЏ РѕС‚СЂРёРјР°РЅРЅСЏ С–РЅРґРµРєСЃСѓ РІСЃРµСЂРµРґРёРЅС– Р±Р°С‚СЊРєС–РІСЃСЊРєРѕРіРѕ РµР»РµРјРµРЅС‚Р°
 export function indexInParent(parent, element) {
 	const array = Array.prototype.slice.call(parent.children);
 	return Array.prototype.indexOf.call(array, element);
 };
-// Функція перевіряє чи об'єкт видимий
+// Р¤СѓРЅРєС†С–СЏ РїРµСЂРµРІС–СЂСЏС” С‡Рё РѕР±'С”РєС‚ РІРёРґРёРјРёР№
 export function isHidden(el) {
 	return (el.offsetParent === null)
 }
-// Обробка медіа запитів з атрибутів
+// РћР±СЂРѕР±РєР° РјРµРґС–Р° Р·Р°РїРёС‚С–РІ Р· Р°С‚СЂРёР±СѓС‚С–РІ
 export function dataMediaQueries(array, dataSetValue) {
 	const media = Array.from(array)
 		.filter(item => item.dataset[dataSetValue])
@@ -206,7 +206,7 @@ export function dataMediaQueries(array, dataSetValue) {
 
 	if (media.length === 0) return [];
 
-	// Отримуємо унікальні брейкпоінти
+	// РћС‚СЂРёРјСѓС”РјРѕ СѓРЅС–РєР°Р»СЊРЅС– Р±СЂРµР№РєРїРѕС–РЅС‚Рё
 	const breakpointsArray = media.map(({ value, type }) => `(${type}-width: ${value}px),${value},${type}`);
 	const uniqueQueries = [...new Set(breakpointsArray)];
 
@@ -214,13 +214,13 @@ export function dataMediaQueries(array, dataSetValue) {
 		const [mediaQuery, mediaBreakpoint, mediaType] = query.split(',');
 		const matchMedia = window.matchMedia(mediaQuery);
 
-		// Фільтруємо об'єкти з потрібними умовами
+		// Р¤С–Р»СЊС‚СЂСѓС”РјРѕ РѕР±'С”РєС‚Рё Р· РїРѕС‚СЂС–Р±РЅРёРјРё СѓРјРѕРІР°РјРё
 		const itemsArray = media.filter(item => item.value === mediaBreakpoint && item.type === mediaType);
 
 		return { itemsArray, matchMedia }
 	});
 }
-// Модуль плавної проктутки до блоку
+// РњРѕРґСѓР»СЊ РїР»Р°РІРЅРѕС— РїСЂРѕРєС‚СѓС‚РєРё РґРѕ Р±Р»РѕРєСѓ
 export const gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 0) => {
 	const targetBlockElement = document.querySelector(targetBlock);
 	if (targetBlockElement) {
@@ -241,12 +241,12 @@ export const gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop 
 				headerItemHeight = headerElement.offsetHeight;
 			}
 		}
-		// Закриваємо меню, якщо воно відкрите
+		// Р—Р°РєСЂРёРІР°С”РјРѕ РјРµРЅСЋ, СЏРєС‰Рѕ РІРѕРЅРѕ РІС–РґРєСЂРёС‚Рµ
 		if (document.documentElement.hasAttribute("data-fls-menu-open")) {
-			bodyUnlock()
+			bodyUnlock(0)
 			document.documentElement.removeAttribute("data-fls-menu-open")
 		}
-		// Прокручування стандартними засобами
+		// РџСЂРѕРєСЂСѓС‡СѓРІР°РЅРЅСЏ СЃС‚Р°РЅРґР°СЂС‚РЅРёРјРё Р·Р°СЃРѕР±Р°РјРё
 		let targetBlockElementPosition = targetBlockElement.getBoundingClientRect().top + scrollY;
 		targetBlockElementPosition = headerItemHeight ? targetBlockElementPosition - headerItemHeight : targetBlockElementPosition;
 		targetBlockElementPosition = offsetTop ? targetBlockElementPosition - offsetTop : targetBlockElementPosition;
@@ -266,3 +266,4 @@ export function formatDate(date, sepp) {
 	const year = d.getFullYear();
 	return `${day}${sepp}${month}${sepp}${year}`;
 }
+

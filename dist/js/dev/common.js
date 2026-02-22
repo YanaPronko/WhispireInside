@@ -136,7 +136,7 @@ const gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 0) =>
       }
     }
     if (document.documentElement.hasAttribute("data-fls-menu-open")) {
-      bodyUnlock();
+      bodyUnlock(0);
       document.documentElement.removeAttribute("data-fls-menu-open");
     }
     let targetBlockElementPosition = targetBlockElement.getBoundingClientRect().top + scrollY;
@@ -450,12 +450,51 @@ class Popup {
   }
 }
 document.querySelector("[data-fls-popup]") ? window.addEventListener("load", () => window.flsPopup = new Popup({})) : null;
+const COOKIE_KEY = "fls-cookie-consent-v1";
+const CONSENT_ACCEPTED = "accepted";
+const CONSENT_DECLINED = "declined";
+const hideBanner = (banner) => {
+  banner.classList.remove("--visible");
+  setTimeout(() => banner.remove(), 260);
+};
+const saveConsent = (status, banner) => {
+  try {
+    localStorage.setItem(COOKIE_KEY, status);
+  } catch (error) {
+    console.warn(error);
+  }
+  hideBanner(banner);
+};
+const initCookieConsent = () => {
+  const banner = document.querySelector("[data-cookie-consent]");
+  if (!banner) return;
+  try {
+    const storedConsent = localStorage.getItem(COOKIE_KEY);
+    if (storedConsent === CONSENT_ACCEPTED || storedConsent === CONSENT_DECLINED) {
+      banner.remove();
+      return;
+    }
+  } catch (error) {
+    console.warn(error);
+  }
+  banner.hidden = false;
+  requestAnimationFrame(() => banner.classList.add("--visible"));
+  const acceptButton = banner.querySelector("[data-cookie-accept]");
+  const declineButton = banner.querySelector("[data-cookie-decline]");
+  if (acceptButton) {
+    acceptButton.addEventListener("click", () => saveConsent(CONSENT_ACCEPTED, banner));
+  }
+  if (declineButton) {
+    declineButton.addEventListener("click", () => saveConsent(CONSENT_DECLINED, banner));
+  }
+};
+window.addEventListener("load", initCookieConsent);
 export {
   slideToggle as a,
-  bodyLockStatus as b,
-  bodyLockToggle as c,
-  bodyUnlock as d,
-  getHash as e,
+  bodyUnlock as b,
+  getHash as c,
+  bodyLockStatus as d,
+  bodyLockToggle as e,
   gotoBlock as g,
   slideUp as s
 };

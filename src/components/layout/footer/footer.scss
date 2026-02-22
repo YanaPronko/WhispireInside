@@ -204,12 +204,29 @@
 		@include adaptiveValue("padding-top", 22, 14, 0, 1920, 375);
 		border-top: 1px solid rgba(51, 65, 85, 0.55);
 		text-align: center;
+		display: grid;
+		@include adaptiveValue("gap", 8, 6, 0, 1920, 375);
 	}
 
 	&__copyright {
 		font-family: "Cormorant Garamond", serif;
 		@include adaptiveValue("font-size", 22, 17, 0, 1920, 375);
 		color: #64748b;
+	}
+
+	&__policy-link {
+		display: inline-block;
+		width: fit-content;
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 22, 17, 0, 1920, 375);
+		color: #67e8f9;
+		text-decoration: none;
+		transition: color 0.2s ease;
+
+		&:hover,
+		&:focus-visible {
+			color: #a5f3fc;
+		}
 	}
 }
 
@@ -272,6 +289,16 @@
 
 		&__copyright {
 			color: #6f8a9a;
+		}
+
+		&__policy-link {
+			color: #0f6f94;
+			text-decoration: none;
+
+			&:hover,
+			&:focus-visible {
+				color: #1b8eb7;
+			}
 		}
 	}
 }
