@@ -110,7 +110,70 @@ const ensureContactSelects = () => {
 	}, 220);
 };
 
+const initFaqAccordion = () => {
+	const faqItems = Array.from(document.querySelectorAll('.faq-item'));
+	if (!faqItems.length) return;
+
+	const closeItem = (item) => {
+		const trigger = item.querySelector('[data-faq-trigger]');
+		const body = item.querySelector('.faq-item__body');
+		if (!trigger || !body || !item.classList.contains('--open')) return;
+
+		body.style.height = `${body.scrollHeight}px`;
+		requestAnimationFrame(() => {
+			item.classList.remove('--open');
+			trigger.setAttribute('aria-expanded', 'false');
+			body.style.height = '0px';
+		});
+	};
+
+	const openItem = (item) => {
+		const trigger = item.querySelector('[data-faq-trigger]');
+		const body = item.querySelector('.faq-item__body');
+		if (!trigger || !body) return;
+
+		body.hidden = false;
+		body.style.height = '0px';
+		requestAnimationFrame(() => {
+			item.classList.add('--open');
+			trigger.setAttribute('aria-expanded', 'true');
+			body.style.height = `${body.scrollHeight}px`;
+		});
+	};
+
+	faqItems.forEach((item) => {
+		const trigger = item.querySelector('[data-faq-trigger]');
+		const body = item.querySelector('.faq-item__body');
+		if (!trigger || !body) return;
+
+		body.hidden = true;
+		body.style.height = '0px';
+
+		body.addEventListener('transitionend', (event) => {
+			if (event.propertyName !== 'height') return;
+			if (item.classList.contains('--open')) {
+				body.style.height = 'auto';
+				return;
+			}
+			body.hidden = true;
+		});
+
+		trigger.addEventListener('click', () => {
+			const isOpen = item.classList.contains('--open');
+			faqItems.forEach((faqItem) => {
+				if (faqItem !== item) closeItem(faqItem);
+			});
+			if (isOpen) {
+				closeItem(item);
+			} else {
+				openItem(item);
+			}
+		});
+	});
+};
+
 window.addEventListener('load', initHeroScrollArrow);
 window.addEventListener('load', initHeroParallax);
 window.addEventListener('load', initPhoneMask);
 window.addEventListener('load', ensureContactSelects);
+window.addEventListener('load', initFaqAccordion);
