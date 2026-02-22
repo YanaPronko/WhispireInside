@@ -7117,11 +7117,11 @@ function formInit() {
       if (error === 0) {
         if (form.dataset.flsForm === "ajax") {
           e.preventDefault();
-          const envFormEndpoint = "".trim();
+          const envFormEndpoint = "https://api.web3forms.com/submit".trim();
           const formAction = envFormEndpoint || (form.getAttribute("action") ? form.getAttribute("action").trim() : "#");
           const formMethod = form.getAttribute("method") ? form.getAttribute("method").trim() : "GET";
           const formData = new FormData(form);
-          const web3FormsKey = "".trim();
+          const web3FormsKey = "51a3f4cf-2a9b-4702-b275-cccacf93c946".trim();
           if (isWeb3FormsEndpoint(formAction)) {
             if (web3FormsKey) {
               formData.set("access_key", web3FormsKey);
