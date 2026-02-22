@@ -1,10 +1,34 @@
 <link rel="stylesheet" href="@components/layout/popup/popup.scss">
-<div data-fls-popup="popup" aria-hidden="true" class="popup">
+
+<div data-fls-popup="form-success" aria-hidden="true" class="popup popup--status popup--success">
 	<div data-fls-popup-wrapper class="popup__wrapper">
 		<div data-fls-popup-body class="popup__body">
-			<button data-fls-popup-close type="button" class="popup__close"><svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg"><path opacity="0.850056" d="M1.73333 1.48883L21.5469 21.0288" stroke="#979797" stroke-linecap="square" /><path opacity="0.850056" d="M21.2667 1.48883L1.45309 21.0288" stroke="#979797" stroke-linecap="square" /></svg></button>
-			<div data-fls-popup-content class="popup__text">
-				<!-- Контент -->
+			<button data-fls-popup-close type="button" class="popup__close" aria-label="Закрыть окно">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div data-fls-popup-content class="popup__text popup-status">
+				<div class="popup-status__icon" aria-hidden="true">
+					<img src="assets/svgicons/check-icon.svg" alt="" width="28" height="28">
+				</div>
+				<h3 class="popup-status__title">Заявка отправлена</h3>
+				<p class="popup-status__message">Спасибо за ваше обращение! <span class="popup-status__break">В ближайшее время Я с вами свяжусь!</span></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-fls-popup="form-error" aria-hidden="true" class="popup popup--status popup--error">
+	<div data-fls-popup-wrapper class="popup__wrapper">
+		<div data-fls-popup-body class="popup__body">
+			<button data-fls-popup-close type="button" class="popup__close" aria-label="Закрыть окно">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div data-fls-popup-content class="popup__text popup-status">
+				<div class="popup-status__icon" aria-hidden="true">
+					<img src="assets/svgicons/sparkles-outline-icon.svg" alt="" width="28" height="28">
+				</div>
+				<h3 class="popup-status__title">Ошибка отправки</h3>
+				<p class="popup-status__message">Что-то пошло не так! Свяжитесь, пожалуйста, со мной посредством соцсетей.</p>
 			</div>
 		</div>
 	</div>

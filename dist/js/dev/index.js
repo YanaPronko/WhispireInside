@@ -1,4 +1,4 @@
-import { s as slideUp, a as slideToggle, b as bodyLockToggle, c as bodyLockStatus, d as bodyUnlock, g as gotoBlock, e as getHash } from "./common.min.js";
+import { s as slideUp, a as slideToggle, b as bodyLockStatus, c as bodyLockToggle, d as bodyUnlock, g as gotoBlock, e as getHash } from "./common.min.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) return;
@@ -3642,6 +3642,18 @@ function requireInputmask() {
 var inputmaskExports = requireInputmask();
 const Inputmask$1 = /* @__PURE__ */ getDefaultExportFromCjs(inputmaskExports);
 let formValidate = {
+  phoneDigitsByCode: {
+    "+7": 11,
+    "+380": 12,
+    "+375": 12,
+    "+1": 11,
+    "+44": 12,
+    "+49": 13,
+    "+33": 11,
+    "+34": 11,
+    "+39": 12,
+    "+48": 11
+  },
   getErrors(form) {
     let error = 0;
     let formRequiredItems = form.querySelectorAll("[required]");
@@ -3672,6 +3684,18 @@ let formValidate = {
       error++;
     } else {
       if (!formRequiredItem.value.trim()) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else if (formRequiredItem.dataset.flsFormRule === "name" && this.nameTest(formRequiredItem)) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else if (formRequiredItem.dataset.flsFormRule === "phone-by-country" && this.phoneByCountryTest(formRequiredItem)) {
+        this.addError(formRequiredItem);
+        this.removeSuccess(formRequiredItem);
+        error++;
+      } else if (formRequiredItem.dataset.flsFormRule === "future-date" && this.futureDateTest(formRequiredItem)) {
         this.addError(formRequiredItem);
         this.removeSuccess(formRequiredItem);
         error++;
@@ -3738,6 +3762,67 @@ let formValidate = {
   },
   emailTest(formRequiredItem) {
     return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value);
+  },
+  nameTest(formRequiredItem) {
+    return !/^[A-Za-zА-Яа-яЁёІіЇїЄєҐґ\s]+$/u.test(formRequiredItem.value.trim());
+  },
+  phoneByCountryTest(formRequiredItem) {
+    const form = formRequiredItem.closest("form");
+    const phoneCodeField = form ? form.querySelector('select[name="phone_code"]') : null;
+    if (!phoneCodeField || !phoneCodeField.value) return true;
+    const selectedCode = phoneCodeField.value;
+    const digits = formRequiredItem.value.replace(/\D+/g, "");
+    const codeDigits = selectedCode.replace(/\D+/g, "");
+    const expectedLength = this.phoneDigitsByCode[selectedCode];
+    if (!expectedLength) return true;
+    if (!digits.startsWith(codeDigits)) return true;
+    return digits.length !== expectedLength;
+  },
+  futureDateTest(formRequiredItem) {
+    const dateValue = this.parseDateString(formRequiredItem.value);
+    if (!dateValue) return true;
+    const today = /* @__PURE__ */ new Date();
+    today.setHours(0, 0, 0, 0);
+    return dateValue < today;
+  },
+  parseDateString(value) {
+    const source = (value || "").trim();
+    if (!source) return null;
+    const separatorMatch = source.match(/[./-]/);
+    if (separatorMatch) {
+      const separator = separatorMatch[0];
+      const parts = source.split(separator).map((part) => part.trim()).filter(Boolean);
+      if (parts.length === 3) {
+        let day;
+        let month;
+        let year;
+        if (parts[0].length === 4) {
+          year = Number(parts[0]);
+          month = Number(parts[1]);
+          day = Number(parts[2]);
+        } else if (parts[2].length === 4) {
+          year = Number(parts[2]);
+          if (separator === "/") {
+            month = Number(parts[0]);
+            day = Number(parts[1]);
+          } else {
+            day = Number(parts[0]);
+            month = Number(parts[1]);
+          }
+        }
+        if (Number.isInteger(day) && Number.isInteger(month) && Number.isInteger(year) && day > 0 && month > 0 && month <= 12) {
+          const parsed = new Date(year, month - 1, day);
+          if (parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day) {
+            parsed.setHours(0, 0, 0, 0);
+            return parsed;
+          }
+        }
+      }
+    }
+    const fallback = new Date(source);
+    if (Number.isNaN(fallback.getTime())) return null;
+    fallback.setHours(0, 0, 0, 0);
+    return fallback;
   }
 };
 class SelectConstructor {
@@ -7154,6 +7239,11 @@ const autoHeight = () => {
 };
 document.querySelector("textarea[data-fls-input-autoheight]") ? window.addEventListener("load", autoHeight) : null;
 function formInit() {
+  const openStatusPopup = (form, status = "success") => {
+    if (!window.flsPopup) return;
+    const popupSelector = status === "success" ? form.dataset.flsFormPopupSuccess || "form-success" : form.dataset.flsFormPopupError || "form-error";
+    window.flsPopup.open(popupSelector);
+  };
   function formSubmit() {
     const forms = document.forms;
     if (forms.length) {
@@ -7178,24 +7268,32 @@ function formInit() {
           const formMethod = form.getAttribute("method") ? form.getAttribute("method").trim() : "GET";
           const formData = new FormData(form);
           form.classList.add("--sending");
-          const response = await fetch(formAction, {
-            method: formMethod,
-            body: formData
-          });
-          if (response.ok) {
-            const responseText = await response.text();
-            let responseResult;
-            try {
-              const safeText = responseText.replace(/^\uFEFF/, "").trim();
-              responseResult = JSON.parse(safeText);
-            } catch (parseError) {
-              responseResult = { message: "Сервер вернул некорректный JSON ответ." };
-              console.error(parseError, responseText);
+          try {
+            const response = await fetch(formAction, {
+              method: formMethod,
+              body: formData
+            });
+            let responseResult = { success: false, message: "Что-то пошло не так! Свяжитесь, пожалуйста, со мной посредством соцсетей." };
+            if (response.ok) {
+              const responseText = await response.text();
+              try {
+                const safeText = responseText.replace(/^\uFEFF/, "").trim();
+                responseResult = JSON.parse(safeText);
+              } catch (parseError) {
+                responseResult = { success: false, message: "Сервер вернул некорректный JSON ответ." };
+                console.error(parseError, responseText);
+              }
             }
             form.classList.remove("--sending");
-            formSent(form, responseResult);
-          } else {
+            if (response.ok && responseResult?.success !== false) {
+              formSent(form, responseResult);
+            } else {
+              formFailed(form, responseResult);
+            }
+          } catch (fetchError) {
             form.classList.remove("--sending");
+            console.error(fetchError);
+            formFailed(form, { success: false, message: "Ошибка сети." });
           }
         } else if (form.dataset.flsForm === "dev") {
           e.preventDefault();
@@ -7212,16 +7310,24 @@ function formInit() {
     function formSent(form, responseResult = ``) {
       document.dispatchEvent(new CustomEvent("formSent", {
         detail: {
-          form
+          form,
+          responseResult
         }
       }));
-      setTimeout(() => {
-        if (window.flsPopup) {
-          const popup = form.dataset.flsFormPopup;
-          popup ? window.flsPopup.open(popup) : null;
-        }
-      }, 0);
+      setTimeout(() => openStatusPopup(form, "success"), 0);
       formValidate.formClean(form);
+    }
+    function formFailed(form, responseResult = ``) {
+      document.dispatchEvent(new CustomEvent("formError", {
+        detail: {
+          form,
+          responseResult
+        }
+      }));
+      setTimeout(() => openStatusPopup(form, "error"), 0);
+      if (responseResult?.message) {
+        console.warn(responseResult.message);
+      }
     }
   }
   function formFieldsInit() {
@@ -7639,6 +7745,7 @@ if (document.querySelector("[data-fls-datepicker]")) {
     overlayButton: langs[LANG].button,
     overlayPlaceholder: langs[LANG].year,
     startDay: 1,
+    minDate: /* @__PURE__ */ new Date(),
     formatter: (input, date, instance) => {
       const value = date.toLocaleDateString();
       input.value = value;

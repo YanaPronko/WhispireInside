@@ -1,24 +1,32 @@
-﻿// РџС–РґРєР»СЋС‡РµРЅРЅСЏ С„СѓРЅРєС†С–РѕРЅР°Р»Сѓ "Р§РµСЂС‚РѕРіРё Р¤СЂС–Р»Р°РЅСЃРµСЂР°"
+﻿// Підключення функціоналу "Чортоги Фрілансера"
 import { gotoBlock, FLS } from "@js/common/functions.js";
-// РџС–РґРєР»СЋС‡РµРЅРЅСЏ С„СѓРЅРєС†С–РѕРЅР°Р»Сѓ РјРѕРґСѓР»СЏ С„РѕСЂРј
+// Підключення функціоналу модуля форм
 import { formValidate } from "../_functions.js";
 
 import './form.scss'
 
 function formInit() {
-	// Р’С–РґРїСЂР°РІР»РµРЅРЅСЏ С„РѕСЂРј
+	const openStatusPopup = (form, status = 'success') => {
+		if (!window.flsPopup) return;
+		const popupSelector = status === 'success'
+			? (form.dataset.flsFormPopupSuccess || 'form-success')
+			: (form.dataset.flsFormPopupError || 'form-error');
+		window.flsPopup.open(popupSelector);
+	};
+
+	// Відправлення форм
 	function formSubmit() {
 		const forms = document.forms;
 		if (forms.length) {
 			for (const form of forms) {
-				// РџСЂРёР±РёСЂР°С”РјРѕ РІР±СѓРґРѕРІР°РЅСѓ РІР°Р»С–РґР°С†С–СЋ
+				// Прибираємо вбудовану валідацію
 				!form.hasAttribute('data-fls-form-novalidate') ? form.setAttribute('novalidate', true) : null
-				// РџРѕРґС–СЏ РІС–РґРїСЂР°РІРєРё
+				// Подія відправки
 				form.addEventListener('submit', function (e) {
 					const form = e.target;
 					formSubmitAction(form, e);
 				});
-				// РџРѕРґС–СЏ РѕС‡РёСЃС‚РєРё
+				// Подія очистки
 				form.addEventListener('reset', function (e) {
 					const form = e.target;
 					formValidate.formClean(form);
@@ -28,33 +36,43 @@ function formInit() {
 		async function formSubmitAction(form, e) {
 			const error = formValidate.getErrors(form)
 			if (error === 0) {
-				if (form.dataset.flsForm === 'ajax') { // РЇРєС‰Рѕ СЂРµР¶РёРј ajax
+				if (form.dataset.flsForm === 'ajax') { // Якщо режим ajax
 					e.preventDefault();
 					const formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
 					const formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
 					const formData = new FormData(form);
 					form.classList.add('--sending');
-					const response = await fetch(formAction, {
-						method: formMethod,
-						body: formData
-					});
-					if (response.ok) {
-						const responseText = await response.text();
-						let responseResult;
-						try {
-							const safeText = responseText.replace(/^\uFEFF/, '').trim();
-							responseResult = JSON.parse(safeText);
-						} catch (parseError) {
-							responseResult = { message: 'Сервер вернул некорректный JSON ответ.' };
-							console.error(parseError, responseText);
+					try {
+						const response = await fetch(formAction, {
+							method: formMethod,
+							body: formData
+						});
+
+						let responseResult = { success: false, message: 'Что-то пошло не так! Свяжитесь, пожалуйста, со мной посредством соцсетей.' };
+						if (response.ok) {
+							const responseText = await response.text();
+							try {
+								const safeText = responseText.replace(/^\uFEFF/, '').trim();
+								responseResult = JSON.parse(safeText);
+							} catch (parseError) {
+								responseResult = { success: false, message: 'Сервер вернул некорректный JSON ответ.' };
+								console.error(parseError, responseText);
+							}
 						}
+
 						form.classList.remove('--sending')
-						formSent(form, responseResult)
-					} else {
+						if (response.ok && responseResult?.success !== false) {
+							formSent(form, responseResult)
+						} else {
+							formFailed(form, responseResult)
+						}
+					} catch (fetchError) {
 						FLS("_FLS_FORM_AJAX_ERR")
 						form.classList.remove('--sending')
+						console.error(fetchError);
+						formFailed(form, { success: false, message: 'Ошибка сети.' })
 					}
-				} else if (form.dataset.flsForm === 'dev') {	// РЇРєС‰Рѕ СЂРµР¶РёРј СЂРѕР·СЂРѕР±РєРё
+				} else if (form.dataset.flsForm === 'dev') { // Якщо режим розробки
 					e.preventDefault()
 					formSent(form)
 				}
@@ -66,29 +84,36 @@ function formInit() {
 				}
 			}
 		}
-		// Р”С–С— РїС–СЃР»СЏ РЅР°РґСЃРёР»Р°РЅРЅСЏ С„РѕСЂРјРё
+		// Дії після надсилання форми
 		function formSent(form, responseResult = ``) {
-			// РЎС‚РІРѕСЂСЋС”РјРѕ РїРѕРґС–СЋ РІС–РґРїСЂР°РІР»РµРЅРЅСЏ С„РѕСЂРјРё
+			// Створюємо подію відправлення форми
 			document.dispatchEvent(new CustomEvent("formSent", {
 				detail: {
-					form: form
+					form: form,
+					responseResult: responseResult
 				}
 			}));
-			// РџРѕРєР°Р·СѓС”РјРѕ РїРѕРїР°Рї, СЏРєС‰Рѕ РїС–РґРєР»СЋС‡РµРЅРѕ РјРѕРґСѓР»СЊ РїРѕРїР°РїС–РІ 
-			// С‚Р° РґР»СЏ С„РѕСЂРјРё РІРєР°Р·Р°РЅРѕ РЅР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ
-			setTimeout(() => {
-				if (window.flsPopup) {
-					const popup = form.dataset.flsFormPopup;
-					popup ? window.flsPopup.open(popup) : null;
-				}
-			}, 0);
-			// РћС‡РёС‰СѓС”РјРѕ С„РѕСЂРјСѓ
+			setTimeout(() => openStatusPopup(form, 'success'), 0);
+			// Очищуємо форму
 			formValidate.formClean(form);
-			// РџРѕРІС–РґРѕРјР»СЏС”РјРѕ РґРѕ РєРѕРЅСЃРѕР»С–
+			// Повідомляємо до консолі
 			FLS(`_FLS_FORM_SEND`);
 		}
+		// Дії при помилці відправки
+		function formFailed(form, responseResult = ``) {
+			document.dispatchEvent(new CustomEvent("formError", {
+				detail: {
+					form: form,
+					responseResult: responseResult
+				}
+			}));
+			setTimeout(() => openStatusPopup(form, 'error'), 0);
+			if (responseResult?.message) {
+				console.warn(responseResult.message);
+			}
+		}
 	}
-	// Р РѕР±РѕС‚Р° С–Р· РїРѕР»СЏРјРё С„РѕСЂРјРё.
+	// Робота із полями форми.
 	function formFieldsInit() {
 		document.body.addEventListener("focusin", function (e) {
 			const targetElement = e.target;
@@ -107,7 +132,7 @@ function formInit() {
 					targetElement.classList.remove('--form-focus');
 					targetElement.parentElement.classList.remove('--form-focus');
 				}
-				// РњРёС‚С‚С”РІР° РІР°Р»С–РґР°С†С–СЏ
+				// Миттєва валідація
 				targetElement.hasAttribute('data-fls-form-validatenow') ? formValidate.validateInput(targetElement) : null;
 			}
 		});

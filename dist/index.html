@@ -5,9 +5,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="./assets/img/favicon.ico">
 		<title>Home Page</title>
-		<script type="module" crossorigin="" src="./js/index.min.js?v=1771177351212"></script>
-		<link rel="modulepreload" crossorigin="" href="./js/common.min.js?v=1771177351212">
-		<link rel="stylesheet" crossorigin="" href="./css/index.min.css?v=1771177351212">
+		<script type="module" crossorigin="" src="./js/index.min.js?v=1771750067294"></script>
+		<link rel="modulepreload" crossorigin="" href="./js/common.min.js?v=1771750067294">
+		<link rel="stylesheet" crossorigin="" href="./css/index.min.css?v=1771750067294">
 	</head>
 	<body>
 		<div class="wrapper">
@@ -429,13 +429,13 @@
 								<h2 id="contact-title" class="contact__title">Записаться на консультацию</h2>
 								<p class="contact__subtitle">Оставьте заявку, и я свяжусь с вами в ближайшее время</p>
 							</div>
-							<form class="contact__form contact-form" data-fls-form="ajax" action="php/sendmail/" method="POST" data-fls-form-gotoerr="">
+							<form class="contact__form contact-form" data-fls-form="ajax" data-fls-form-popup-success="form-success" data-fls-form-popup-error="form-error" action="php/sendmail/" method="POST" data-fls-form-gotoerr="">
 								<div class="contact-form__field">
 									<label class="contact-form__label" for="contact-service">
 										<img src="./assets/svgicons/sparkles-outline-icon.svg" alt="" width="20" height="20">
 										<span>Выберите услугу *</span>
 									</label>
-									<select id="contact-service" data-fls-select="" data-fls-select-modif="contact" data-fls-select-z-index="60" data-fls-select-show-selected="" name="service_type" required data-fls-form-errtext="Выберите услугу">
+									<select id="contact-service" data-fls-select="" data-fls-select-validate="" data-fls-select-modif="contact" data-fls-select-z-index="60" data-fls-select-show-selected="" name="service_type" required data-fls-form-errtext="Выберите услугу">
 										<option value="" selected>Выберите...</option>
 										<option value="Шепот в тени">Шепот в тени</option>
 										<option value="Второй шанс">Второй шанс</option>
@@ -451,14 +451,14 @@
 										<img src="./assets/svgicons/message-icon.svg" alt="" width="20" height="20">
 										<span>Ваше имя *</span>
 									</label>
-									<input id="contact-name" data-fls-input="" autocomplete="off" type="text" name="name" required data-fls-form-errtext="Введите имя" placeholder="Как к вам обращаться?" class="input">
+									<input id="contact-name" data-fls-input="" data-fls-form-validatenow="" data-fls-form-rule="name" autocomplete="off" type="text" name="name" required data-fls-form-errtext="Имя может содержать только буквы и пробелы" placeholder="Как к вам обращаться?" class="input">
 								</div>
 								<div class="contact-form__field">
 									<label class="contact-form__label" for="contact-date">
 										<img src="./assets/svgicons/calendar-icon.svg" alt="" width="20" height="20">
 										<span>Желаемая дата *</span>
 									</label>
-									<input id="contact-date" data-fls-input="" data-fls-datepicker="" autocomplete="off" type="text" name="desired_date" required data-fls-form-errtext="Выберите дату" placeholder="Выберите дату" class="input">
+									<input id="contact-date" data-fls-input="" data-fls-form-validatenow="" data-fls-form-rule="future-date" data-fls-datepicker="" autocomplete="off" type="text" name="desired_date" required data-fls-form-errtext="Выберите дату не раньше сегодняшнего дня" placeholder="Выберите дату" class="input">
 								</div>
 								<div class="contact-form__field">
 									<label class="contact-form__label" for="contact-phone">
@@ -466,7 +466,7 @@
 										<span>Телефон *</span>
 									</label>
 									<div class="contact-form__phone-row">
-										<select id="contact-phone-code" data-fls-select="" data-fls-select-modif="contact" data-fls-select-z-index="60" name="phone_code" required data-fls-form-errtext="Выберите код страны">
+										<select id="contact-phone-code" data-fls-select="" data-fls-select-validate="" data-fls-select-modif="contact" data-fls-select-z-index="60" name="phone_code" required data-fls-form-errtext="Выберите код страны">
 											<option value="+7" selected>+7 (Россия)</option>
 											<option value="+380">+380 (Украина)</option>
 											<option value="+375">+375 (Беларусь)</option>
@@ -478,7 +478,7 @@
 											<option value="+39">+39 (Италия)</option>
 											<option value="+48">+48 (Польша)</option>
 										</select>
-										<input id="contact-phone" data-fls-input="" data-fls-input-mask="+7 (999) 999-99-99" autocomplete="off" type="tel" name="phone" required data-fls-form-errtext="Введите номер телефона" placeholder="+7 (___) ___-__-__" class="input">
+										<input id="contact-phone" data-fls-input="" data-fls-form-validatenow="" data-fls-form-rule="phone-by-country" data-fls-input-mask="+7 (999) 999-99-99" autocomplete="off" type="tel" name="phone" required data-fls-form-errtext="Введите телефон в формате выбранной страны" placeholder="+7 (___) ___-__-__" class="input">
 									</div>
 								</div>
 								<div class="contact-form__field">
@@ -486,7 +486,7 @@
 										<img src="./assets/svgicons/mail-icon.svg" alt="" width="20" height="20">
 										<span>Email *</span>
 									</label>
-									<input id="contact-email" data-fls-input="" autocomplete="off" type="email" name="email" required data-fls-form-errtext="Введите корректный email" placeholder="your@email.com" class="input">
+									<input id="contact-email" data-fls-input="" data-fls-form-validatenow="" autocomplete="off" type="email" name="email" required data-fls-form-errtext="Введите корректный email" placeholder="your@email.com" class="input">
 								</div>
 								<div class="contact-form__field">
 									<label class="contact-form__label" for="contact-message">
@@ -508,6 +508,38 @@
 			<footer data-fls-footer="" class="footer">
 				<div class="footer__container"></div>
 			</footer>
+		</div>
+		<div data-fls-popup="form-success" aria-hidden="true" class="popup popup--status popup--success">
+			<div data-fls-popup-wrapper="" class="popup__wrapper">
+				<div data-fls-popup-body="" class="popup__body">
+					<button data-fls-popup-close="" type="button" class="popup__close" aria-label="Закрыть окно">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div data-fls-popup-content="" class="popup__text popup-status">
+						<div class="popup-status__icon" aria-hidden="true">
+							<img src="./assets/svgicons/check-icon.svg" alt="" width="28" height="28">
+						</div>
+						<h3 class="popup-status__title">Заявка отправлена</h3>
+						<p class="popup-status__message">Спасибо за ваше обращение! В ближайшее время я с вами свяжусь</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div data-fls-popup="form-error" aria-hidden="true" class="popup popup--status popup--error">
+			<div data-fls-popup-wrapper="" class="popup__wrapper">
+				<div data-fls-popup-body="" class="popup__body">
+					<button data-fls-popup-close="" type="button" class="popup__close" aria-label="Закрыть окно">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<div data-fls-popup-content="" class="popup__text popup-status">
+						<div class="popup-status__icon" aria-hidden="true">
+							<img src="./assets/svgicons/sparkles-outline-icon.svg" alt="" width="28" height="28">
+						</div>
+						<h3 class="popup-status__title">Ошибка отправки</h3>
+						<p class="popup-status__message">Что-то пошло не так! Свяжитесь, пожалуйста, со мной посредством соцсетей.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
