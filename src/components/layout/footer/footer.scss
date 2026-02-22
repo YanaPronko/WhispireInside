@@ -60,9 +60,18 @@
 		display: inline-flex;
 		align-items: center;
 		@include adaptiveValue("gap", 8, 6, 0, 1920, 375);
+
+		&:hover,
+		&:focus-visible {
+			.footer__brand-icon {
+				transform: translateY(-1px) scale(1.06);
+				filter: brightness(0) saturate(100%) invert(81%) sepia(27%) saturate(2796%) hue-rotate(350deg) brightness(104%) contrast(94%);
+			}
+		}
 	}
 
 	&__brand-icon {
+		transition: transform 0.3s ease, filter 0.3s ease;
 		filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
 	}
 
@@ -178,12 +187,12 @@
 
 		&--tiktok:hover,
 		&--tiktok:focus-visible {
-			background: rgba(148, 163, 184, 0.2);
-			border-color: rgba(148, 163, 184, 0.5);
+			background: rgba(30, 41, 59, 0.6);
+			border-color: rgba(148, 163, 184, 0.65);
 			box-shadow: 0 10px 18px -10px rgba(148, 163, 184, 0.6);
 
 			img {
-				filter: brightness(0) saturate(100%) invert(86%) sepia(7%) saturate(577%) hue-rotate(163deg) brightness(105%) contrast(98%);
+				filter: brightness(0) saturate(100%) invert(96%) sepia(3%) saturate(1512%) hue-rotate(173deg) brightness(104%) contrast(95%);
 			}
 		}
 
@@ -215,17 +224,35 @@
 	}
 
 	&__policy-link {
+		position: relative;
 		display: inline-block;
 		width: fit-content;
 		font-family: "Cormorant Garamond", serif;
 		@include adaptiveValue("font-size", 22, 17, 0, 1920, 375);
+		font-weight: 600;
 		color: #67e8f9;
 		text-decoration: none;
-		transition: color 0.2s ease;
+		transition: color 0.3s ease;
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: -2px;
+			width: 0;
+			height: 2px;
+			border-radius: 2px;
+			background: linear-gradient(90deg, #1b8eb7 0%, #d9a84e 100%);
+			transition: width 0.3s ease;
+		}
 
 		&:hover,
 		&:focus-visible {
-			color: #a5f3fc;
+			color: #fbbf24;
+
+			&::after {
+				width: 100%;
+			}
 		}
 	}
 }
@@ -236,11 +263,11 @@
 		border-top-color: #9ec3d4;
 
 		&__brand-icon {
-			filter: brightness(0) saturate(100%) invert(41%) sepia(35%) saturate(831%) hue-rotate(153deg) brightness(91%) contrast(90%);
+			filter: brightness(0) saturate(100%) invert(14%) sepia(60%) saturate(1244%) hue-rotate(175deg) brightness(95%) contrast(97%);
 		}
 
 		&__brand-title {
-			background: linear-gradient(135deg, #1b8eb7 0%, #0f6f94 100%);
+			background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
 			-webkit-background-clip: text;
 			background-clip: text;
 			-webkit-text-fill-color: transparent;
@@ -258,7 +285,7 @@
 			color: #456a7e;
 
 			img {
-				filter: brightness(0) saturate(100%) invert(41%) sepia(35%) saturate(831%) hue-rotate(153deg) brightness(91%) contrast(90%);
+				filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
 			}
 
 			&:hover,
@@ -275,10 +302,47 @@
 				filter: brightness(0) saturate(100%) invert(32%) sepia(10%) saturate(1647%) hue-rotate(159deg) brightness(92%) contrast(86%);
 			}
 
-			&:hover,
-			&:focus-visible {
+			&--instagram:hover,
+			&--instagram:focus-visible {
+				background: rgba(236, 72, 153, 0.18);
+				border-color: rgba(236, 72, 153, 0.45);
+				box-shadow: 0 10px 18px -10px rgba(236, 72, 153, 0.65);
+
 				img {
-					filter: brightness(0) saturate(100%) invert(27%) sepia(55%) saturate(932%) hue-rotate(161deg) brightness(90%) contrast(92%);
+					filter: brightness(0) saturate(100%) invert(39%) sepia(74%) saturate(2098%) hue-rotate(300deg) brightness(100%) contrast(96%);
+				}
+			}
+
+			&--facebook:hover,
+			&--facebook:focus-visible {
+				background: rgba(59, 130, 246, 0.18);
+				border-color: rgba(59, 130, 246, 0.45);
+				box-shadow: 0 10px 18px -10px rgba(59, 130, 246, 0.6);
+
+				img {
+					filter: brightness(0) saturate(100%) invert(40%) sepia(94%) saturate(1322%) hue-rotate(200deg) brightness(100%) contrast(95%);
+				}
+			}
+
+			&--tiktok:hover,
+			&--tiktok:focus-visible {
+				background: #ffffff;
+				border-color: rgba(148, 163, 184, 0.65);
+				box-shadow: 0 10px 18px -10px rgba(148, 163, 184, 0.45);
+
+				img {
+					filter: brightness(0) saturate(100%) invert(23%) sepia(17%) saturate(1226%) hue-rotate(163deg) brightness(94%) contrast(92%);
+				}
+			}
+
+			&--telegram:hover,
+			&--telegram:focus-visible {
+				background: rgba(56, 189, 248, 0.18);
+				border-color: rgba(56, 189, 248, 0.45);
+				box-shadow: 0 10px 18px -10px rgba(56, 189, 248, 0.6);
+
+				img {
+					filter: brightness(0) saturate(100%) invert(57%) sepia(86%) saturate(1192%) hue-rotate(169deg) brightness(101%) contrast(96%);
 				}
 			}
 		}
@@ -292,12 +356,19 @@
 		}
 
 		&__policy-link {
-			color: #0f6f94;
+			color: #0b3f5c;
 			text-decoration: none;
+			text-shadow: 0 1px 10px rgba(2, 6, 23, 0.45);
+			font-weight: 600;
+
+			&::after {
+				background: linear-gradient(90deg, #1b8eb7 0%, #d9a84e 100%);
+			}
 
 			&:hover,
 			&:focus-visible {
-				color: #1b8eb7;
+				color: #11698c;
+				text-shadow: none;
 			}
 		}
 	}

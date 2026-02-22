@@ -114,6 +114,7 @@
   isolation: isolate;
   display: flex;
   align-items: center;
+  min-height: 100vh;
   min-height: 100svh;
   overflow: hidden;
 }
@@ -1974,6 +1975,7 @@ textarea.input {
   }
 }@media (max-width: 47.99875em) {
   .hero {
+    min-height: 92vh;
     min-height: 92svh;
   }
   .hero__bg {

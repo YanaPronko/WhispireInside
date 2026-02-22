@@ -263,18 +263,18 @@ class SelectConstructor {
     selectItems.forEach((originalSelect, index) => {
       this.selectInit(originalSelect, index + 1);
     });
-    document.addEventListener("click", (function(e) {
+    document.addEventListener("click", function(e) {
       this.selectsActions(e);
-    }).bind(this));
-    document.addEventListener("keydown", (function(e) {
+    }.bind(this));
+    document.addEventListener("keydown", function(e) {
       this.selectsActions(e);
-    }).bind(this));
-    document.addEventListener("focusin", (function(e) {
+    }.bind(this));
+    document.addEventListener("focusin", function(e) {
       this.selectsActions(e);
-    }).bind(this));
-    document.addEventListener("focusout", (function(e) {
+    }.bind(this));
+    document.addEventListener("focusout", function(e) {
       this.selectsActions(e);
-    }).bind(this));
+    }.bind(this));
   }
   // Функція ініціалізації конкретного селекту
   selectInit(originalSelect, index) {
@@ -657,7 +657,7 @@ const __vitePreload = function preload(baseModule, deps, importerUrl) {
     };
     const links = document.getElementsByTagName("link");
     const cspNonceMeta = document.querySelector("meta[property=csp-nonce]");
-    const cspNonce = cspNonceMeta?.nonce || cspNonceMeta?.getAttribute("nonce");
+    const cspNonce = (cspNonceMeta == null ? void 0 : cspNonceMeta.nonce) || (cspNonceMeta == null ? void 0 : cspNonceMeta.getAttribute("nonce"));
     promise = allSettled(deps.map((dep) => {
       dep = assetsURL(dep, importerUrl);
       if (dep in seen) return;
@@ -4321,16 +4321,18 @@ const initPhoneMask = () => {
   const syncMask = () => applyMask(phoneCode.value);
   phoneCode.addEventListener("change", syncMask);
   document.addEventListener("selectCallback", (event) => {
-    const changedSelect = event?.detail?.select;
+    var _a;
+    const changedSelect = (_a = event == null ? void 0 : event.detail) == null ? void 0 : _a.select;
     if (!changedSelect || changedSelect.name !== "phone_code") return;
     syncMask();
   });
 };
 const ensureContactSelects = () => {
   const rebuildIfNeeded = (fieldName) => {
+    var _a;
     const originalSelect = document.querySelector(`select[name="${fieldName}"]`);
     if (!originalSelect || !window.flsSelect) return;
-    const builtSelect = originalSelect.parentElement?.querySelector(".select__option");
+    const builtSelect = (_a = originalSelect.parentElement) == null ? void 0 : _a.querySelector(".select__option");
     if (!builtSelect && originalSelect.options.length > 0) {
       window.flsSelect.selectBuild(originalSelect);
     }
@@ -7134,7 +7136,7 @@ function formInit() {
               }
             }
             form.classList.remove("--sending");
-            if (response.ok && responseResult?.success !== false) {
+            if (response.ok && (responseResult == null ? void 0 : responseResult.success) !== false) {
               formSent(form, responseResult);
             } else {
               formFailed(form, responseResult);
@@ -7174,7 +7176,7 @@ function formInit() {
         }
       }));
       setTimeout(() => openStatusPopup(form, "error"), 0);
-      if (responseResult?.message) {
+      if (responseResult == null ? void 0 : responseResult.message) {
         console.warn(responseResult.message);
       }
     }
@@ -7229,9 +7231,9 @@ function requireDatepicker_min() {
           if (1 & t2 && (e2 = n(e2)), 8 & t2) return e2;
           if (4 & t2 && "object" == typeof e2 && e2 && e2.__esModule) return e2;
           var a = /* @__PURE__ */ Object.create(null);
-          if (n.r(a), Object.defineProperty(a, "default", { enumerable: true, value: e2 }), 2 & t2 && "string" != typeof e2) for (var r in e2) n.d(a, r, (function(t3) {
+          if (n.r(a), Object.defineProperty(a, "default", { enumerable: true, value: e2 }), 2 & t2 && "string" != typeof e2) for (var r in e2) n.d(a, r, function(t3) {
             return e2[t3];
-          }).bind(null, r));
+          }.bind(null, r));
           return a;
         }, n.n = function(e2) {
           var t2 = e2 && e2.__esModule ? function() {
@@ -7600,7 +7602,7 @@ if (document.querySelector("[data-fls-datepicker]")) {
       input.value = value;
     },
     onSelect: function(instance, date) {
-      const inputElement = instance?.el || document.querySelector("[data-fls-datepicker]");
+      const inputElement = (instance == null ? void 0 : instance.el) || document.querySelector("[data-fls-datepicker]");
       if (!inputElement) return;
       formValidate.validateInput(inputElement);
     }

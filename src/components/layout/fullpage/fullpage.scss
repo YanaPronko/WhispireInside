@@ -9,6 +9,7 @@ body {
 
 // Оболонка секцій
 [data-fls-fullpage] {
+	min-height: 100vh;
 	min-height: 100svh;
 	.--fullpage-init & {
 		// Для того щоб секції не перекривали буллети

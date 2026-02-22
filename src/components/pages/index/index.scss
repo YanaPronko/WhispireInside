@@ -6,6 +6,7 @@
 	isolation: isolate;
 	display: flex;
 	align-items: center;
+	min-height: 100vh;
 	min-height: 100svh;
 	overflow: hidden;
 
@@ -13,6 +14,7 @@
 	@include adaptiveValue("padding-bottom", 80, 36, 0, 1920, 320);
 
 	@media (max-width: toEm(767.98)) {
+		min-height: 92vh;
 		min-height: 92svh;
 	}
 

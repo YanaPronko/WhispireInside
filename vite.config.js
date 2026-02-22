@@ -227,6 +227,8 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 			outDir: isWp ? path.join(__dirname, "src/components/wordpress/fls-theme/build") : path.join(__dirname, "dist"),
 			emptyOutDir: true,
 			manifest: false,
+			target: "es2018",
+			cssTarget: "chrome61",
 			minify: !templateConfig.js.devfiles,
 			cssMinify: !templateConfig.styles.devfiles,
 			cssCodeSplit: templateConfig.styles.codesplit,

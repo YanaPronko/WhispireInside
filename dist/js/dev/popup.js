@@ -37,7 +37,8 @@ function pageNavigation() {
       if (targetElement.closest("[data-fls-scrollto]")) {
         const gotoLink = targetElement.closest("[data-fls-scrollto]");
         const dataSelector = gotoLink.dataset.flsScrollto ? gotoLink.dataset.flsScrollto.trim() : "";
-        const hrefSelector = gotoLink.getAttribute("href")?.startsWith("#") ? gotoLink.getAttribute("href") : "";
+        const hrefAttr = gotoLink.getAttribute("href");
+        const hrefSelector = hrefAttr && hrefAttr.startsWith("#") ? hrefAttr : "";
         const gotoLinkSelector = dataSelector || hrefSelector;
         if (!gotoLinkSelector) return;
         const noHeader = gotoLink.hasAttribute("data-fls-scrollto-header") ? true : false;

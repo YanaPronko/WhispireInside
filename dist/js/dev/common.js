@@ -239,15 +239,15 @@ class Popup {
       ...options,
       classes: {
         ...config.classes,
-        ...options?.classes
+        ...options == null ? void 0 : options.classes
       },
       hashSettings: {
         ...config.hashSettings,
-        ...options?.hashSettings
+        ...options == null ? void 0 : options.hashSettings
       },
       on: {
         ...config.on,
-        ...options?.on
+        ...options == null ? void 0 : options.on
       }
     };
     this.bodyLock = false;
@@ -260,7 +260,7 @@ class Popup {
   buildPopup() {
   }
   eventsPopup() {
-    document.addEventListener("click", (function(e) {
+    document.addEventListener("click", function(e) {
       const buttonOpen = e.target.closest(`[${this.options.attributeOpenButton}]`);
       if (buttonOpen) {
         e.preventDefault();
@@ -281,8 +281,8 @@ class Popup {
         this.close();
         return;
       }
-    }).bind(this));
-    document.addEventListener("keydown", (function(e) {
+    }.bind(this));
+    document.addEventListener("keydown", function(e) {
       if (this.options.closeEsc && e.which == 27 && e.code === "Escape" && this.isOpen) {
         e.preventDefault();
         this.close();
@@ -292,15 +292,15 @@ class Popup {
         this._focusCatch(e);
         return;
       }
-    }).bind(this));
+    }.bind(this));
     if (this.options.hashSettings.goHash) {
-      window.addEventListener("hashchange", (function() {
+      window.addEventListener("hashchange", function() {
         if (window.location.hash) {
           this._openToHash();
         } else {
           this.close(this.targetOpen.selector);
         }
-      }).bind(this));
+      }.bind(this));
       if (window.location.hash) {
         this._openToHash();
       }
@@ -450,6 +450,35 @@ class Popup {
   }
 }
 document.querySelector("[data-fls-popup]") ? window.addEventListener("load", () => window.flsPopup = new Popup({})) : null;
+(function() {
+  if (typeof window === "undefined") return;
+  if (!Element.prototype.matches) {
+    Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+  }
+  if (!Element.prototype.closest) {
+    Element.prototype.closest = function(selector) {
+      let el = this;
+      while (el && el.nodeType === 1) {
+        if (el.matches(selector)) return el;
+        el = el.parentElement || el.parentNode;
+      }
+      return null;
+    };
+  }
+  if (window.NodeList && !NodeList.prototype.forEach) {
+    NodeList.prototype.forEach = Array.prototype.forEach;
+  }
+  if (typeof window.CustomEvent !== "function") {
+    const CustomEventPolyfill = function(event, params) {
+      params = params || { bubbles: false, cancelable: false, detail: null };
+      const evt = document.createEvent("CustomEvent");
+      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+      return evt;
+    };
+    CustomEventPolyfill.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEventPolyfill;
+  }
+})();
 const COOKIE_KEY = "fls-cookie-consent-v1";
 const CONSENT_ACCEPTED = "accepted";
 const CONSENT_DECLINED = "declined";
