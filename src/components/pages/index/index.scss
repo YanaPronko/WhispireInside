@@ -731,19 +731,17 @@
 	border: 1px solid rgba(51, 65, 85, 0.45);
 	border-radius: 16px;
 	overflow: hidden;
-	transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-
-	&.--open {
-		background: rgba(30, 41, 59, 0.72);
-		border-color: rgba(103, 232, 249, 0.38);
-		box-shadow: 0 16px 28px -20px rgba(34, 211, 238, 0.45);
-	}
+	transition: border-color 0.2s ease;
 
 	&__head {
 		width: 100%;
 		text-align: left;
 		background: transparent;
 		border: 0;
+		-webkit-tap-highlight-color: transparent;
+		tap-highlight-color: transparent;
+		touch-action: manipulation;
+		user-select: none;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
@@ -753,6 +751,16 @@
 		@include adaptiveValue("padding-bottom", 22, 14, 0, 1920, 375);
 		@include adaptiveValue("padding-left", 24, 14, 0, 1920, 375);
 		@include adaptiveValue("padding-right", 24, 14, 0, 1920, 375);
+	}
+
+	&__head:focus,
+	&__head:focus-visible {
+		outline: none;
+		background: transparent;
+	}
+
+	&__head:active {
+		background: transparent;
 	}
 
 	&__question {
@@ -791,16 +799,6 @@
 		&::after {
 			width: 2px;
 			height: 12px;
-		}
-	}
-
-	&[open] &__icon {
-		background: rgba(34, 211, 238, 0.18);
-		border-color: rgba(103, 232, 249, 0.52);
-
-		&::after {
-			opacity: 0;
-			transform: translate(-50%, -50%) scaleY(0);
 		}
 	}
 
@@ -1547,12 +1545,6 @@
 		background: #ffffff;
 		border-color: #9ec3d4;
 		box-shadow: 0 12px 22px -18px rgba(9, 77, 111, 0.25);
-
-		&.--open {
-			background: #f5fbff;
-			border-color: #4f95b5;
-			box-shadow: 0 18px 30px -20px rgba(27, 142, 183, 0.4);
-		}
 
 		&__question {
 			color: #0f6f94;
