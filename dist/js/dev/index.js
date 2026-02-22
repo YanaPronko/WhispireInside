@@ -7750,7 +7750,10 @@ if (document.querySelector("[data-fls-datepicker]")) {
       const value = date.toLocaleDateString();
       input.value = value;
     },
-    onSelect: function(input, instance, date) {
+    onSelect: function(instance, date) {
+      const inputElement = instance?.el || document.querySelector("[data-fls-datepicker]");
+      if (!inputElement) return;
+      formValidate.validateInput(inputElement);
     }
   });
   window.flsDatepicker = datePicker;

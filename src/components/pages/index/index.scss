@@ -559,6 +559,126 @@
 	}
 }
 
+.testimonials {
+	background: linear-gradient(180deg, #020617 0%, #0b1324 52%, #020617 100%);
+	padding-top: 0;
+	@include adaptiveValue("padding-bottom", 128, 72, 0, 1920, 375);
+
+	&__head {
+		text-align: center;
+		@include adaptiveValue("margin-bottom", 48, 30, 0, 1920, 375);
+	}
+
+	&__label {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		@include adaptiveValue("gap", 8, 6, 0, 1920, 375);
+		@include adaptiveValue("margin-bottom", 14, 10, 0, 1920, 375);
+		color: #22d3ee;
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 22, 18, 0, 1920, 375);
+
+		img {
+			width: 20px;
+			height: 20px;
+			filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
+		}
+	}
+
+	&__title {
+		font-family: "Cinzel", serif;
+		font-weight: 700;
+		@include adaptiveValue("font-size", 56, 36, 0, 1920, 375);
+		line-height: 1.08;
+		background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		@include adaptiveValue("margin-bottom", 14, 10, 0, 1920, 375);
+	}
+
+	&__subtitle {
+		margin: 0 auto;
+		max-width: toRem(740);
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 30, 20, 0, 1920, 375);
+		line-height: 1.35;
+		color: #cbd5e1;
+	}
+
+	&__grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		@include adaptiveValue("gap", 24, 14, 0, 1920, 375);
+
+		@media (max-width: toEm(1100)) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		@media (max-width: toEm(700)) {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+.testimonial-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	@include adaptiveValue("padding", 28, 16, 0, 1920, 375);
+	border-radius: 20px;
+	background: rgba(30, 41, 59, 0.5);
+	backdrop-filter: blur(6px);
+	border: 1px solid rgba(51, 65, 85, 0.45);
+	transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+
+	&:hover {
+		transform: translateY(-6px);
+		background: rgba(30, 41, 59, 0.72);
+		box-shadow: 0 18px 34px -22px rgba(34, 211, 238, 0.45);
+	}
+
+	&__rating {
+		display: inline-flex;
+		align-items: center;
+		@include adaptiveValue("gap", 4, 2, 0, 1920, 375);
+		@include adaptiveValue("margin-bottom", 18, 12, 0, 1920, 375);
+		position: relative;
+		z-index: 1;
+	}
+
+	&__star {
+		font-family: "Inter", sans-serif;
+		font-weight: 700;
+		line-height: 1;
+		@include adaptiveValue("font-size", 20, 18, 0, 1920, 375);
+		color: #fbbf24;
+		text-shadow: 0 1px 0 rgba(2, 6, 23, 0.45);
+	}
+
+	&__text {
+		font-family: "Cormorant Garamond", serif;
+		@include adaptiveValue("font-size", 25, 19, 0, 1920, 375);
+		line-height: 1.5;
+		color: #cbd5e1;
+		margin: 0;
+		@include adaptiveValue("margin-bottom", 18, 12, 0, 1920, 375);
+		position: relative;
+		z-index: 1;
+	}
+
+	&__author {
+		margin-top: auto;
+		font-family: "Cinzel", serif;
+		@include adaptiveValue("font-size", 24, 20, 0, 1920, 375);
+		font-weight: 600;
+		color: #67e8f9;
+		position: relative;
+		z-index: 1;
+	}
+}
+
 .contact {
 	background: linear-gradient(180deg, #020617 0%, #0f172a 52%, #020617 100%);
 	padding-top: 0;
@@ -1212,6 +1332,43 @@
 			img {
 				filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
 			}
+		}
+	}
+
+	.testimonials {
+		background: linear-gradient(180deg, #f3fbff 0%, #eaf6fb 52%, #f3fbff 100%);
+
+		&__label {
+			color: #0f6f94;
+			font-weight: 600;
+			img {
+				filter: brightness(0) saturate(100%) invert(77%) sepia(50%) saturate(1646%) hue-rotate(358deg) brightness(102%) contrast(95%);
+			}
+		}
+
+		&__subtitle {
+			color: #355a70;
+			font-weight: 500;
+		}
+	}
+
+	.testimonial-card {
+		background: #ffffff;
+		border-color: #9ec3d4;
+		box-shadow: 0 12px 22px -18px rgba(9, 77, 111, 0.25);
+
+		&:hover {
+			background: #f5fbff;
+			box-shadow: 0 18px 30px -20px rgba(27, 142, 183, 0.4);
+		}
+
+		&__text {
+			color: #355a70;
+			font-weight: 500;
+		}
+
+		&__author {
+			color: #0f6f94;
 		}
 	}
 
