@@ -19,8 +19,8 @@ export default {
 		usetemplate: 'main'
 	},
 	git: {
-		repo: ``,
-		branch: `main`
+		repo: `https://github.com/YanaPronko/WhispireInside.git`,
+		branch: `gh-pages`
 	},
 	navpanel: {
 		dev: true,

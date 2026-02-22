@@ -4,6 +4,28 @@ require __DIR__ . '/config.php';
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 header('Content-type: application/json; charset=UTF-8');
+
+// Basic CORS support for frontend hosted on a different domain (e.g. GitHub Pages)
+$allowedOriginsRaw = trim((string) (getenv('CORS_ALLOWED_ORIGINS') ?: ''));
+$allowedOrigins = array_values(array_filter(array_map('trim', explode(',', $allowedOriginsRaw))));
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if ($requestOrigin !== '') {
+	if (in_array('*', $allowedOrigins, true)) {
+		header('Access-Control-Allow-Origin: *');
+	} elseif (in_array($requestOrigin, $allowedOrigins, true)) {
+		header('Access-Control-Allow-Origin: ' . $requestOrigin);
+		header('Vary: Origin');
+	}
+}
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+	http_response_code(204);
+	exit;
+}
+
 ob_start();
 
 set_error_handler(static function ($severity, $message, $file, $line) {

@@ -61,6 +61,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 			},
 		},
 		base: templateConfig.server.path,
+		envDir: __dirname,
 		assetsInclude: ['src/components/**/*.html'],
 		clearScreen: true,
 		root: path.join(__dirname, "src"),

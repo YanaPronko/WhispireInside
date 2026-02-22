@@ -13,6 +13,7 @@ function formInit() {
 			: (form.dataset.flsFormPopupError || 'form-error');
 		window.flsPopup.open(popupSelector);
 	};
+	const isWeb3FormsEndpoint = (url) => /api\.web3forms\.com\/submit\/?$/i.test((url || '').trim());
 
 	// Відправлення форм
 	function formSubmit() {
@@ -38,29 +39,49 @@ function formInit() {
 			if (error === 0) {
 				if (form.dataset.flsForm === 'ajax') { // Якщо режим ajax
 					e.preventDefault();
-					const formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
+					const envFormEndpoint = (import.meta.env.VITE_FORM_ENDPOINT || '').trim();
+					const formAction = envFormEndpoint || (form.getAttribute('action') ? form.getAttribute('action').trim() : '#');
 					const formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
 					const formData = new FormData(form);
+					const web3FormsKey = (import.meta.env.VITE_WEB3FORMS_ACCESS_KEY || '').trim();
+					if (isWeb3FormsEndpoint(formAction)) {
+						if (web3FormsKey) {
+							formData.set('access_key', web3FormsKey);
+						} else if (!formData.get('access_key')) {
+							formFailed(form, { success: false, message: 'Не указан ключ Web3Forms (VITE_WEB3FORMS_ACCESS_KEY).' });
+							return;
+						}
+					}
 					form.classList.add('--sending');
 					try {
 						const response = await fetch(formAction, {
 							method: formMethod,
+							headers: {
+								'Accept': 'application/json'
+							},
 							body: formData
 						});
 
 						let responseResult = { success: false, message: 'Что-то пошло не так! Свяжитесь, пожалуйста, со мной посредством соцсетей.' };
-						if (response.ok) {
-							const responseText = await response.text();
+						const responseText = await response.text();
+						const safeText = responseText.replace(/^\uFEFF/, '').trim();
+						if (!safeText) {
+							if (response.ok) responseResult = { success: true };
+						} else {
 							try {
-								const safeText = responseText.replace(/^\uFEFF/, '').trim();
 								responseResult = JSON.parse(safeText);
 							} catch (parseError) {
-								responseResult = { success: false, message: 'Сервер вернул некорректный JSON ответ.' };
-								console.error(parseError, responseText);
+								// External form backends can return non-JSON even on success.
+								if (response.ok) {
+									responseResult = { success: true };
+								}
+								console.warn('Non-JSON response from form endpoint.', parseError, responseText);
 							}
 						}
+						if (!response.ok && responseResult?.errors?.[0]?.message) {
+							responseResult.message = responseResult.errors[0].message;
+						}
 
-						form.classList.remove('--sending')
 						if (response.ok && responseResult?.success !== false) {
 							formSent(form, responseResult)
 						} else {
@@ -68,9 +89,10 @@ function formInit() {
 						}
 					} catch (fetchError) {
 						FLS("_FLS_FORM_AJAX_ERR")
-						form.classList.remove('--sending')
 						console.error(fetchError);
 						formFailed(form, { success: false, message: 'Ошибка сети.' })
+					} finally {
+						form.classList.remove('--sending')
 					}
 				} else if (form.dataset.flsForm === 'dev') { // Якщо режим розробки
 					e.preventDefault()

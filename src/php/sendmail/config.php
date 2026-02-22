@@ -48,7 +48,14 @@ function loadDotEnv(string $path): void
 	}
 }
 
-loadDotEnv(__DIR__ . '/../../../.env');
+$envCandidates = [
+	__DIR__ . '/../../../.env',
+	__DIR__ . '/.env',
+	__DIR__ . '/../.env',
+];
+foreach ($envCandidates as $envPath) {
+	loadDotEnv($envPath);
+}
 
 $smtpHost = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
 $smtpPort = (int) (getenv('SMTP_PORT') ?: 587);

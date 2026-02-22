@@ -39,8 +39,8 @@
 		height: 24px;
 		display: inline-block;
 		background: $brandBlue;
-		-webkit-mask: url("assets/svgicons/logo-mark.svg") center / contain no-repeat;
-		mask: url("assets/svgicons/logo-mark.svg") center / contain no-repeat;
+		-webkit-mask: url("../assets/svgicons/logo-mark.svg") center / contain no-repeat;
+		mask: url("../assets/svgicons/logo-mark.svg") center / contain no-repeat;
 		transition: background 0.3s ease, transform 0.3s ease, filter 0.3s ease;
 	}
 
