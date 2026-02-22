@@ -114,7 +114,7 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
 			...(isProduction && templateConfig.server.copyfiles ? [templateImports.viteStaticCopy({
 				targets: [
 					{
-						src: 'files',
+						src: 'files/*',
 						dest: './',
 					},
 				],

@@ -4,6 +4,7 @@
 	</if>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preload" as="image" href="@img/hero/hero-bg.jpg">
 	<include src="@components/layout/head/fonts-preload.html"></include>
 	<link rel="stylesheet" href="@styles/fonts/fonts.css">
 	<link rel="stylesheet" href="@styles/fonts/iconfont.css">
@@ -22,5 +23,26 @@
 	<if condition="'[[description]]' !== ''">
 		<meta name="description" content="[[description]]">
 	</if>
+	<if condition="'[[canonical]]' !== ''">
+		<link rel="canonical" href="[[canonical]]">
+	</if>
+	<meta property="og:title" content="[[title]]">
+	<if condition="'[[description]]' !== ''">
+		<meta property="og:description" content="[[description]]">
+		<meta name="twitter:description" content="[[description]]">
+	</if>
+	<if condition="'[[canonical]]' !== ''">
+		<meta property="og:url" content="[[canonical]]">
+	</if>
+	<if condition="'[[og_type]]' !== ''">
+		<meta property="og:type" content="[[og_type]]">
+	</if>
+	<if condition="'[[og_image]]' !== ''">
+		<meta property="og:image" content="[[og_image]]">
+		<meta name="twitter:image" content="[[og_image]]">
+	</if>
+	<meta property="og:site_name" content="Whispersinside">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="[[title]]">
 	<title>[[title]]</title>
 </head>
