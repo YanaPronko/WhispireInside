@@ -151,7 +151,7 @@ function copyFolder(dir) {
 	try {
 		cp(dir, dir.replace('src/php/', 'dist/'), {
 			recursive: true,
-			force: false,
+			force: true,
 			preserveTimestamps: true,
 		});
 	} catch (error) {

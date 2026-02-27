@@ -73,8 +73,13 @@ $mail->Host = $smtpHost;
 $mail->SMTPAuth = true;
 $mail->Username = $smtpUsername;
 $mail->Password = $smtpPassword;
-$mail->SMTPSecure = $smtpEncryption === 'smtps'
-	? PHPMailer::ENCRYPTION_SMTPS
-	: PHPMailer::ENCRYPTION_STARTTLS;
+if ($smtpEncryption === 'smtps' || $smtpEncryption === 'ssl') {
+	$mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+} elseif ($smtpEncryption === 'starttls' || $smtpEncryption === 'tls') {
+	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+} else {
+	$mail->SMTPSecure = false;
+	$mail->SMTPAutoTLS = false;
+}
 $mail->Port = $smtpPort;
 $mail->Timeout = 30;

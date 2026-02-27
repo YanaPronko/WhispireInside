@@ -4,6 +4,28 @@ require __DIR__ . '/config.php';
 ini_set('display_errors', '0');
 error_reporting(E_ALL);
 header('Content-type: application/json; charset=UTF-8');
+
+// Basic CORS support for frontend hosted on a different domain (e.g. GitHub Pages)
+$allowedOriginsRaw = trim((string) (getenv('CORS_ALLOWED_ORIGINS') ?: ''));
+$allowedOrigins = array_values(array_filter(array_map('trim', explode(',', $allowedOriginsRaw))));
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if ($requestOrigin !== '') {
+	if (in_array('*', $allowedOrigins, true)) {
+		header('Access-Control-Allow-Origin: *');
+	} elseif (in_array($requestOrigin, $allowedOrigins, true)) {
+		header('Access-Control-Allow-Origin: ' . $requestOrigin);
+		header('Vary: Origin');
+	}
+}
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
+	http_response_code(204);
+	exit;
+}
+
 ob_start();
 
 set_error_handler(static function ($severity, $message, $file, $line) {
@@ -24,21 +46,57 @@ $messageText = cleanValue($_POST['message'] ?? '');
 
 $errors = [];
 
+function parseDesiredDate(string $value): ?DateTimeImmutable
+{
+	$value = trim($value);
+	if ($value === '') {
+		return null;
+	}
+
+	$formats = ['d.m.Y', 'd/m/Y', 'd-m-Y', 'm/d/Y', 'Y-m-d'];
+	foreach ($formats as $format) {
+		$parsed = DateTimeImmutable::createFromFormat($format, $value);
+		$errors = DateTimeImmutable::getLastErrors();
+		$hasErrors = is_array($errors) && (($errors['warning_count'] ?? 0) > 0 || ($errors['error_count'] ?? 0) > 0);
+		if ($parsed instanceof DateTimeImmutable && !$hasErrors) {
+			return $parsed->setTime(0, 0, 0);
+		}
+	}
+
+	try {
+		return (new DateTimeImmutable($value))->setTime(0, 0, 0);
+	} catch (Throwable $e) {
+		return null;
+	}
+}
+
 if ($serviceType === '') {
 	$errors[] = 'Не выбрана услуга.';
 }
 if ($name === '') {
 	$errors[] = 'Не указано имя.';
+} elseif (!preg_match('/^[A-Za-zА-Яа-яЁёІіЇїЄєҐґ\s]+$/u', $name)) {
+	$errors[] = 'Имя может содержать только буквы и пробелы.';
 }
 if ($desiredDate === '') {
 	$errors[] = 'Не выбрана дата.';
+} else {
+	$parsedDesiredDate = parseDesiredDate($desiredDate);
+	if ($parsedDesiredDate === null) {
+		$errors[] = 'Дата указана некорректно.';
+	} else {
+		$today = new DateTimeImmutable('today');
+		if ($parsedDesiredDate < $today) {
+			$errors[] = 'Дата не может быть в прошлом.';
+		}
+	}
 }
 if ($phone === '') {
 	$errors[] = 'Не указан телефон.';
 } else {
 	$phoneDigits = preg_replace('/\D+/', '', $phone);
-	if (strlen($phoneDigits) < 11) {
-		$errors[] = 'Телефон указан некорректно.';
+	if (!preg_match('/^[\d\s()+\-]+$/u', $phone) || strlen($phoneDigits) < 7 || strlen($phoneDigits) > 15) {
+		$errors[] = 'Phone number is invalid.';
 	}
 }
 if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -51,15 +109,20 @@ if (!empty($errors)) {
 	}
 	restore_error_handler();
 	echo json_encode([
+		'success' => false,
 		'message' => implode(' ', $errors),
 	]);
 	exit;
 }
 
 try {
-	$mail->setFrom($mail->Username, 'Шепот внутри');
-	$mail->addAddress('yaniarz89@gmail.com');
-	$mail->Subject = 'Новая заявка на консультацию';
+	$fromName = getenv('SMTP_FROM_NAME') ?: 'Шепот внутри';
+	$toEmail = getenv('SMTP_TO') ?: $mail->Username;
+	$mailSubject = getenv('SMTP_SUBJECT') ?: 'Новая заявка на консультацию';
+
+	$mail->setFrom($mail->Username, $fromName);
+	$mail->addAddress($toEmail);
+	$mail->Subject = $mailSubject;
 
 	$body = '<h1>Новая заявка с сайта</h1>';
 	$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
@@ -73,9 +136,11 @@ try {
 
 	$mail->Body = $body;
 	$mail->send();
+	$responseSuccess = true;
 	$responseMessage = 'Заявка отправлена. Спасибо!';
 } catch (Throwable $e) {
-	$responseMessage = 'Не удалось отправить заявку. Проверьте настройки SMTP.';
+	$responseSuccess = false;
+	$responseMessage = 'Не удалось отправить заявку. SMTP: ' . ($mail->ErrorInfo ?: $e->getMessage());
 }
 
 restore_error_handler();
@@ -83,5 +148,6 @@ if (ob_get_length()) {
 	ob_clean();
 }
 echo json_encode([
+	'success' => $responseSuccess,
 	'message' => $responseMessage,
 ]);
