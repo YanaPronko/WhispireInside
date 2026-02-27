@@ -1,6 +1,5 @@
 
 import './index.scss'
-import Inputmask from 'inputmask'
 import '@components/forms/select/select.js'
 
 const initHeroParallax = async () => {
@@ -55,43 +54,6 @@ const initHeroScrollArrow = () => {
 	window.addEventListener('resize', onScroll, { passive: true });
 };
 
-const initPhoneMask = () => {
-	const phoneCode = document.querySelector('select[name="phone_code"]');
-	const phoneInput = document.querySelector('#contact-phone');
-	if (!phoneCode || !phoneInput) return;
-
-	const masksByCode = {
-		'+7': '+7 (999) 999-99-99',
-		'+380': '+380 (99) 999-99-99',
-		'+375': '+375 (99) 999-99-99',
-		'+1': '+1 (999) 999-9999',
-		'+44': '+44 99 9999 9999',
-		'+49': '+49 999 99999999',
-		'+33': '+33 9 99 99 99 99',
-		'+34': '+34 999 99 99 99',
-		'+39': '+39 999 999 9999',
-		'+48': '+48 999 999 999'
-	};
-
-	const applyMask = (code) => {
-		const mask = masksByCode[code] || masksByCode['+7'];
-		const inputMask = new Inputmask({ mask, showMaskOnHover: false });
-		inputMask.mask(phoneInput);
-		phoneInput.value = '';
-		phoneInput.placeholder = mask.replace(/9/g, '_');
-		phoneInput.dataset.flsInputMask = mask;
-	};
-
-	applyMask(phoneCode.value);
-	const syncMask = () => applyMask(phoneCode.value);
-	phoneCode.addEventListener('change', syncMask);
-	document.addEventListener('selectCallback', (event) => {
-		const changedSelect = event?.detail?.select;
-		if (!changedSelect || changedSelect.name !== 'phone_code') return;
-		syncMask();
-	});
-};
-
 const ensureContactSelects = () => {
 	const rebuildIfNeeded = (fieldName) => {
 		const originalSelect = document.querySelector(`select[name="${fieldName}"]`);
@@ -103,10 +65,8 @@ const ensureContactSelects = () => {
 	};
 
 	rebuildIfNeeded('service_type');
-	rebuildIfNeeded('phone_code');
 	setTimeout(() => {
 		rebuildIfNeeded('service_type');
-		rebuildIfNeeded('phone_code');
 	}, 220);
 };
 
@@ -174,6 +134,5 @@ const initFaqAccordion = () => {
 
 window.addEventListener('load', initHeroScrollArrow);
 window.addEventListener('load', initHeroParallax);
-window.addEventListener('load', initPhoneMask);
 window.addEventListener('load', ensureContactSelects);
 window.addEventListener('load', initFaqAccordion);

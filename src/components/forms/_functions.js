@@ -3,18 +3,6 @@ import { FLS } from "@js/common/functions.js"
 
 // Валідація форм
 export let formValidate = {
-	phoneDigitsByCode: {
-		'+7': 11,
-		'+380': 12,
-		'+375': 12,
-		'+1': 11,
-		'+44': 12,
-		'+49': 13,
-		'+33': 11,
-		'+34': 11,
-		'+39': 12,
-		'+48': 11,
-	},
 	getErrors(form) {
 		FLS(`_FLS_FORM_VALIDATE`);
 		let error = 0;
@@ -53,7 +41,7 @@ export let formValidate = {
 				this.addError(formRequiredItem);
 				this.removeSuccess(formRequiredItem);
 				error++;
-			} else if (formRequiredItem.dataset.flsFormRule === 'phone-by-country' && this.phoneByCountryTest(formRequiredItem)) {
+			} else if (formRequiredItem.dataset.flsFormRule === 'phone' && this.phoneTest(formRequiredItem)) {
 				this.addError(formRequiredItem);
 				this.removeSuccess(formRequiredItem);
 				error++;
@@ -128,19 +116,11 @@ export let formValidate = {
 	nameTest(formRequiredItem) {
 		return !/^[A-Za-zА-Яа-яЁёІіЇїЄєҐґ\s]+$/u.test(formRequiredItem.value.trim());
 	},
-	phoneByCountryTest(formRequiredItem) {
-		const form = formRequiredItem.closest('form');
-		const phoneCodeField = form ? form.querySelector('select[name="phone_code"]') : null;
-		if (!phoneCodeField || !phoneCodeField.value) return true;
-
-		const selectedCode = phoneCodeField.value;
-		const digits = formRequiredItem.value.replace(/\D+/g, '');
-		const codeDigits = selectedCode.replace(/\D+/g, '');
-		const expectedLength = this.phoneDigitsByCode[selectedCode];
-
-		if (!expectedLength) return true;
-		if (!digits.startsWith(codeDigits)) return true;
-		return digits.length !== expectedLength;
+	phoneTest(formRequiredItem) {
+		const value = formRequiredItem.value.trim();
+		if (!/^[\d\s()+\-]+$/.test(value)) return true;
+		const digits = value.replace(/\D+/g, '');
+		return digits.length < 7 || digits.length > 15;
 	},
 	futureDateTest(formRequiredItem) {
 		const dateValue = this.parseDateString(formRequiredItem.value);

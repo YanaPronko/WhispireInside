@@ -40,24 +40,11 @@ function cleanValue($value)
 $serviceType = cleanValue($_POST['service_type'] ?? '');
 $name = cleanValue($_POST['name'] ?? '');
 $desiredDate = cleanValue($_POST['desired_date'] ?? '');
-$phoneCode = cleanValue($_POST['phone_code'] ?? '');
 $phone = cleanValue($_POST['phone'] ?? '');
 $email = cleanValue($_POST['email'] ?? '');
 $messageText = cleanValue($_POST['message'] ?? '');
 
 $errors = [];
-$phoneDigitsByCode = [
-	'+7' => 11,
-	'+380' => 12,
-	'+375' => 12,
-	'+1' => 11,
-	'+44' => 12,
-	'+49' => 13,
-	'+33' => 11,
-	'+34' => 11,
-	'+39' => 12,
-	'+48' => 11,
-];
 
 function parseDesiredDate(string $value): ?DateTimeImmutable
 {
@@ -104,18 +91,12 @@ if ($desiredDate === '') {
 		}
 	}
 }
-if ($phoneCode === '' || !array_key_exists($phoneCode, $phoneDigitsByCode)) {
-	$errors[] = 'Не выбран код страны.';
-}
 if ($phone === '') {
 	$errors[] = 'Не указан телефон.';
 } else {
 	$phoneDigits = preg_replace('/\D+/', '', $phone);
-	$codeDigits = preg_replace('/\D+/', '', $phoneCode);
-	$expectedLength = $phoneDigitsByCode[$phoneCode] ?? null;
-
-	if ($expectedLength === null || strpos($phoneDigits, $codeDigits) !== 0 || strlen($phoneDigits) !== $expectedLength) {
-		$errors[] = 'Телефон указан некорректно.';
+	if (!preg_match('/^[\d\s()+\-]+$/u', $phone) || strlen($phoneDigits) < 7 || strlen($phoneDigits) > 15) {
+		$errors[] = 'Phone number is invalid.';
 	}
 }
 if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -147,7 +128,6 @@ try {
 	$body .= '<p><strong>Услуга:</strong> ' . $serviceType . '</p>';
 	$body .= '<p><strong>Имя:</strong> ' . $name . '</p>';
 	$body .= '<p><strong>Желаемая дата:</strong> ' . $desiredDate . '</p>';
-	$body .= '<p><strong>Код страны:</strong> ' . $phoneCode . '</p>';
 	$body .= '<p><strong>Телефон:</strong> ' . $phone . '</p>';
 	$body .= '<p><strong>Email:</strong> ' . $email . '</p>';
 	if ($messageText !== '') {
